@@ -196,7 +196,11 @@ public class PlanService {
 
     @Transactional
     public Comment getComment(long commentId) {
-        return planRepository.findCommentById(commentId).get();
+
+        Comment comment = planRepository.findCommentById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException(String.format("comment not found")));
+        return comment;
+
     }
 
     @Transactional
