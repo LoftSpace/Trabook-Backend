@@ -1,19 +1,15 @@
 package Trabook.PlanManager.domain.destination;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class DestinationReactionDto {
-    public DestinationReactionDto() {}
-
     private String reactionType;
     private long userId;
     private long placeId;
-
-    public DestinationReactionDto(String reactionType, long userId, long placeId) {
-        this.reactionType = reactionType;
-        this.userId = userId;
-        this.placeId = placeId;
-    }
 }

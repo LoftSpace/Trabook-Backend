@@ -1,18 +1,11 @@
 package Trabook.PlanManager.domain.plan;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
+@AllArgsConstructor
 public class PlanIdDTO {
-
     private long planId;
-
-    public PlanIdDTO() {}
-
-    public PlanIdDTO(long planId) {
-
-        this.planId = planId;
-    }
 }

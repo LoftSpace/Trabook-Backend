@@ -48,7 +48,7 @@ public class PlanListController {
                     return "default";
                 },
                 service -> service //?? 이문구 문법적으로 알아보기
-                //stream.collect.Coolectore.toMap 이것도 문법적으로 닷 ㅣ알아보기
+
         ));
 
     }
@@ -76,17 +76,6 @@ public class PlanListController {
             @RequestParam Boolean userScrapOnly,
             @RequestHeader(required = false) Integer userId) {
 
-        // 좋아요/스크랩 여부 둘다 보내기
-
-//        System.out.println("search = " + search);
-//        System.out.println("region = " + region);
-//        System.out.println("memberCount = " + memberCount);
-//        System.out.println("duration = " + duration);
-//        System.out.println("sorts = " + sorts);
-//        System.out.println("pageSize = " + pageSize);
-//        System.out.println("pageNum = " + pageNum);
-//        System.out.println("userId = " + userId);
-
 
         List<PlanGeneralDTO> customPlanList =
                 planService.findCustomPlanList(search, state, numOfPeople, duration, sorts, userId, userScrapOnly);
@@ -104,24 +93,6 @@ public class PlanListController {
         // 서브리스트 반환 (페이지의 일부 요소와 전체 페이지 수)
         return new CustomPlanListDTO(customPlanList.subList(startIndex, endIndex), totalPages);
     }
-/*
-    @ResponseBody
-    @GetMapping("/popular")  //로직 바꿔야됨
-    public List<PlanListResponseDTO> getHottestPlan(@RequestHeader(value = "userId", required = false) Long userId) {
-        List<PlanListResponseDTO> hottestPlan = planService.getHottestPlan(userId);
-
-        for(PlanListResponseDTO planListResponseDTO : hottestPlan) {
-            PlanResponseDTO plan = planService.getPlan(planListResponseDTO.getPlanId(), userId);
-            List<String> tags = planService.getTagsVersion1(plan.getPlan().getDayPlanList());
-            planListResponseDTO.setTags(tags);
-        }
-
-        return hottestPlan;
-
-    }
-
-
- */
 
     @ResponseBody
     @GetMapping("/popular")
@@ -130,26 +101,6 @@ public class PlanListController {
         return hottestPlan;
     }
 
-/*
-
-
-    @ResponseBody
-    @GetMapping("/popular")
-    public List<PlanListResponseDTO> getHottestPlanRedis(@RequestHeader(value = "userId", required = false) Long userId) {
-            List<PlanListResponseDTO> hottestPlan = planRedisService.getHottestPlan(userId);
-        for(PlanListResponseDTO planListResponseDTO : hottestPlan) {
-            PlanResponseDTO plan = planService.getPlan(planListResponseDTO.getPlanId(), userId);
-            List<String> tags = planService.getTags(plan.getPlan().getDayPlanList());
-            planListResponseDTO.setTags(tags);
-        }
-        return hottestPlan;
-
-
-    }
-
-
-
- */
 
 
 

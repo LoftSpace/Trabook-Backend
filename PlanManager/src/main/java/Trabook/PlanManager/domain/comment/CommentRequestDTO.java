@@ -1,12 +1,16 @@
 package Trabook.PlanManager.domain.comment;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CommentRequestDTO {
     private long commentId;
     private long userId;
@@ -14,18 +18,6 @@ public class CommentRequestDTO {
     private String content;
     private long parentId;
     private int refOrder;
-
-
     private String time;
 
-    public CommentRequestDTO() {}
-    public CommentRequestDTO(long commentId,long userId, long planId, String content, long parentId, int refOrder, String time) {
-        this.userId = userId;
-        this.commentId = commentId;
-        this.planId = planId;
-        this.content = content;
-        this.parentId = parentId;
-        this.refOrder = refOrder;
-        this.time = time;
-    }
 }

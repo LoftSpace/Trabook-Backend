@@ -1,45 +1,29 @@
 package Trabook.PlanManager.domain.destination;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Place {
-    Long placeId;
-    Long cityId;
-    String address;
-    String placeName;
-    String description;
-    Double latitude;
-    Double longitude;
-    Long star;
-    String category;
-    String imgSrc;
-    String subcategory;
-    Double ratingScore;
-    Integer scraps;
-    Integer numOfAdded;
-    Integer numOfReview;
-    Boolean isScrapped;
-    public Place(){};
+    private Long placeId;
+    private Long cityId;
+    private String address;
+    private String placeName;
+    private String description;
+    private Double latitude;
+    private Double longitude;
+    private Long star;
+    private String category;
+    private String imgSrc;
+    private String subcategory;
+    private Double ratingScore;
+    private Integer scraps;
+    private Integer numOfAdded;
+    private Integer numOfReview;
+    private Boolean isScrapped;
 
-    public Place(Long placeId, Long cityId, String address, String placeName, String description, Double latitude, Double longitude, Long star, String category, String imgSrc, String subcategory, Double ratingScore, Integer scraps, Integer numOfAdded, Integer numOfReview, Boolean isScrapped) {
-        this.placeId = placeId;
-        this.cityId = cityId;
-        this.address = address;
-        this.placeName = placeName;
-        this.description = description;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.star = star;
-        this.category = category;
-        this.imgSrc = imgSrc;
-        this.subcategory = subcategory;
-
-        this.ratingScore = ratingScore;
-        this.scraps = scraps;
-        this.numOfAdded = numOfAdded;
-        this.numOfReview = numOfReview;
-        this.isScrapped = isScrapped;
-    }
 }

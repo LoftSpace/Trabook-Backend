@@ -92,6 +92,7 @@ public class PlanController {
         PlanResponseDTO result = planService.getPlan(planId,userId);
 
         long planOwnerId = result.getPlan().getUserId();
+
         User planOwner = webClientService.getUserInfoBlocking(planOwnerId);
         result.setUser(planOwner);
 

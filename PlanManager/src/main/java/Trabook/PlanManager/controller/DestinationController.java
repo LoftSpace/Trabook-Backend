@@ -63,19 +63,5 @@ public class DestinationController {
         return ResponseEntity.ok(new ResponseMessage(message));
     }
 
-    @ResponseBody
-    @PostMapping("/reaction")
-    public String addPlaceReaction(@RequestBody DestinationReactionDto destinationReactionDto) {
-        return destinationService.addPlaceReaction(destinationReactionDto);
-    }
-
-    @ResponseBody
-    @DeleteMapping("/reaction")
-    public String deletePlanReaction(@RequestBody DestinationReactionDto destinationReactionDto) {
-        return destinationService.deletePlaceReaction(destinationReactionDto);
-    }
-
-
-
 
 }
