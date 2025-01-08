@@ -56,7 +56,7 @@ public class CommentServiceParallelTest {
         }
         latch.await();
 
-
+//        Assertions.assertThat(planService.getPlan(580,3L).getComments().size()).isEqualTo(27);
     }
 
 }

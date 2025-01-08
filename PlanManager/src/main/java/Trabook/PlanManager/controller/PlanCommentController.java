@@ -23,7 +23,8 @@ public class PlanCommentController {
         comment.setCommentId(0);
         CommentUpdateResponseDTO commentUpdateResponseDTO = new CommentUpdateResponseDTO();
         try {
-            commentUpdateResponseDTO = planService.addComment(comment);
+            commentUpdateResponseDTO.setCommentId(planService.addComment(comment));
+            commentUpdateResponseDTO.setMessage("comment added");
             return ResponseEntity.ok(commentUpdateResponseDTO);
         } catch (IllegalArgumentException e){
             commentUpdateResponseDTO.setMessage("no plan exists");

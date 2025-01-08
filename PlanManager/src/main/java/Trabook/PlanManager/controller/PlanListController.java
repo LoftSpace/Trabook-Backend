@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Tag(name = "PlanList API", description = "API test for CRUD Plans")
+
 @Slf4j
 @RestController
 @RequestMapping("/plans")

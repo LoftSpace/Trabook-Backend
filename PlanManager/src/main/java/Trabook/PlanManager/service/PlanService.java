@@ -183,15 +183,14 @@ public class PlanService {
     }
 
     @Transactional
-    public CommentUpdateResponseDTO addComment(CommentRequestDTO comment) {
+    public long addComment(CommentRequestDTO comment) {
         long planId = comment.getPlanId();
         planRepository.findById(planId)
                  .orElseThrow(() -> new IllegalArgumentException(String.format("plan not found")));
-
-        long commentId = planRepository.addComment(comment);
         planRepository.increaseCommentCount(planId);
+        long commentId = planRepository.addComment(comment);
+        return commentId;
 
-        return new CommentUpdateResponseDTO("added comment",commentId);
     }
 
     @Transactional
@@ -213,6 +212,7 @@ public class PlanService {
 
         List<Place> placeList = destinationRepository.findPlaceListByPlanId(plan.getPlanId());
         int placeIndex = 0;
+
         for(DayPlan dayPlan : dayPlanList) {
             for(DayPlan.Schedule schedule : dayPlan.getScheduleList()) {
                 Place place = placeList.get(placeIndex);

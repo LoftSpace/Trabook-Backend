@@ -9,18 +9,21 @@ import Trabook.PlanManager.repository.customRowMapper.NestedRowMapper;
 import Trabook.PlanManager.response.PlanListResponseDTO;
 import Trabook.PlanManager.domain.plan.DayPlan;
 import Trabook.PlanManager.response.PlanResponseDTO;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+@ComponentScan
 public class JdbcTemplatePlanRepository implements PlanRepository{
 
     private final JdbcTemplate jdbcTemplate;
@@ -149,7 +152,7 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
 
     @Override
     public Optional<Plan> findById(long planId){
-        String sql = "SELECT * FROM Plan WHERE planId = ? for update;";
+        String sql = "SELECT * FROM Plan WHERE planId = ?;";
         List<Plan> result = jdbcTemplate.query(sql, planRowMapper(), planId);
         return result.stream().findAny();
     }

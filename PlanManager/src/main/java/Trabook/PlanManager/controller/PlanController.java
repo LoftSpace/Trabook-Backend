@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-@Tag(name = "Plan API", description = "API test for CRUD Plan")
+
 @Slf4j
 @RestController
 @RequestMapping("/plan")

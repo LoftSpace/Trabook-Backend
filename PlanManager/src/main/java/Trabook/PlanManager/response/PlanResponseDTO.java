@@ -4,13 +4,17 @@ import Trabook.PlanManager.domain.comment.Comment;
 import Trabook.PlanManager.domain.plan.DayPlan;
 import Trabook.PlanManager.domain.plan.Plan;
 import Trabook.PlanManager.domain.user.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Setter @Getter
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PlanResponseDTO {
     private Plan plan;
     private User user;
@@ -18,15 +22,5 @@ public class PlanResponseDTO {
     private boolean isScrapped;
     private List<String> tags;
     private List<Comment> comments;
-    public PlanResponseDTO() {}
 
-    public PlanResponseDTO(Plan plan, List<DayPlan> dayPlanList, User user, boolean isLiked, boolean isScrapped, List<String> tags,List<Comment> comments) {
-        this.plan = plan;
-        //this.dayPlanList = dayPlanList;
-        this.user = user;
-        this.isLiked = isLiked;
-        this.isScrapped = isScrapped;
-        this.tags = tags;
-        this.comments = comments;
-    }
 }
