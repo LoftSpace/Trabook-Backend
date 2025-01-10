@@ -135,9 +135,9 @@ public class DestinationService {
 
     @Transactional
     public boolean isScrapPlace(long placeId,long userId) {
-        //System.out.println("placeId = " + placeId + ", userId = " + userId);
         return destinationRepository.isScrapped(placeId,userId);
     }
+
     public List<PlaceForModalDTO> getHottestPlace(Long userId){
         List<Place> top10Places = destinationRepository.findHottestPlaceList();
         List<PlaceForModalDTO> result = new ArrayList<>();
@@ -155,13 +155,7 @@ public class DestinationService {
         }
         return result;
     }
-    /*
-    public Optional<Place> getPlaceByPlaceId(long placeId){
-        return destinationRepository.findByPlaceId(placeId);
-    }
 
-
-     */
 
     public Optional<Place> getPlaceByPlaceId(long placeId) {
         return destinationRepository.findByPlaceId(placeId);

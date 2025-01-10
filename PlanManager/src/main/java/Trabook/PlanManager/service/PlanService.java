@@ -7,25 +7,21 @@ import Trabook.PlanManager.domain.plan.*;
 import Trabook.PlanManager.repository.destination.DestinationRepository;
 import Trabook.PlanManager.repository.plan.PlanListRepository;
 import Trabook.PlanManager.repository.plan.PlanRepository;
-import Trabook.PlanManager.response.CommentUpdateResponseDTO;
 import Trabook.PlanManager.response.PlanListResponseDTO;
 import Trabook.PlanManager.response.PlanResponseDTO;
 import Trabook.PlanManager.service.destination.PointDeserializer;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.geo.Point;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.sql.SQLIntegrityConstraintViolationException;
+
 import java.util.*;
 
 @Slf4j
@@ -40,8 +36,6 @@ public class PlanService {
 
     @Transactional
     public long createPlan(PlanCreateDTO planCreateDTO) {
-        //user존재 로직 추가
-
         return planRepository.createPlan(planCreateDTO);
     }
 
@@ -60,7 +54,6 @@ public class PlanService {
         }
 
         planId = updatePlanToDB(plan);
-
         return planId;
     }
 
@@ -141,10 +134,6 @@ public class PlanService {
     }
 
 
-
-
-
-
     private void updateOrSaveSchedule(Plan plan, DayPlan dayPlan) {
         int day = dayPlan.getDay();
         long planId = plan.getPlanId();
@@ -195,7 +184,6 @@ public class PlanService {
 
     @Transactional
     public Comment getComment(long commentId) {
-
         Comment comment = planRepository.findCommentById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException(String.format("comment not found")));
         return comment;
@@ -238,7 +226,7 @@ public class PlanService {
         }
         result.setLiked(isLiked);
         result.setScrapped(isScrapped);
-        result.setTags(getTagsVersion3(placeList));
+        result.setTags(getTags(placeList));
         List<Comment> comments = planRepository.findCommentListByPlanId(planId);
         result.setComments(comments);
         return result;
@@ -246,26 +234,9 @@ public class PlanService {
 
     }
 
-    public List<String> getTagsVersion1(List<DayPlan> dayPlanList) {
-        //tagCount 변수로 3개 되면 리턴할지 아니면 리스트의 사이즈를 확인할지 고민해보기
-       // List<String> tags = new ArrayList<>();
-        Set<String> tags = new HashSet<>();
-       // List<DayPlan> dayPlanList = plan.getDayPlanList();
 
-        for(DayPlan dayPlan : dayPlanList) {
-            List<DayPlan.Schedule> scheduleList = dayPlan.getScheduleList();
-            for(DayPlan.Schedule schedule : scheduleList) {
-                tags.add(destinationRepository.findTagByPlaceId(schedule.getPlaceId()));
-                if(tags.size()==3)
-                    return new ArrayList<>(tags);
-            }
-        }
-        return new ArrayList<>(tags);
-    }
-    public List<String> getTagsVersion2(long planId) {
-        return planRepository.findTagsByPlanId(planId);
-    }
-    public List<String> getTagsVersion3(List<Place> placeList) {
+
+    public List<String> getTags(List<Place> placeList) {
         Set<String> tags = new HashSet<>();
         for(Place place : placeList) {
             tags.add(place.getSubcategory());
@@ -286,8 +257,7 @@ public class PlanService {
     @Transactional
     public String deleteLike(long userId,long planId){
         planRepository.deleteLike(userId,planId);
-        int updatedLikes = planRepository.downLike(planId);
-        // log.info("planId : {} like 수 감소[{} -> {}]",planId,updatedLikes-1,updatedLikes);
+        planRepository.downLike(planId);
         return "delete complete";
     }
 
@@ -305,17 +275,16 @@ public class PlanService {
     public String deleteComment(long commentId) {
 
         Comment comment = planRepository.findCommentById(commentId).get();
-        if(comment == null)
-            return "comment already deleted";
-        if(comment.getRefOrder()==0)//comment ref oreder가 0인지 확인 로직
-        {
+        planRepository.findCommentById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException(String.format("comment already deleted")));
+
+        // 대댓글인지 확인
+        if(comment.getRefOrder()==0) {
             planRepository.deleteCommentByRef(comment.getParentId(),commentId, comment.getPlanId());
             return "delete complete";
         } else {
-            if(planRepository.deleteComment(commentId)==1)
-                return "delete complete";
-            else
-                return "error comment delete";
+            planRepository.deleteComment(commentId);
+            return "delete complete";
         }
 
     }
@@ -324,64 +293,33 @@ public class PlanService {
     public String likePlan(long planId, long userId) {
 
         if(isPlanExistInRanking(planId)){
-            System.out.println("plan in rank");
             ZSetOperations<String, String> zsetOps = redisTemplate.opsForZSet();
             String planKey = "plan:content:" + planId;
             zsetOps.incrementScore("topPlans",planKey,1);
             return "like complete";
         } else {
-            try {
-                if (planRepository.findById(planId).isPresent()) {
-                    planRepository.likePlan(userId, planId);
-                    planRepository.upLike(planId);
-                    return "like complete";
-                } else
-                    return "no plan exists";
-            } catch (DataAccessException e) {
-                if (e.getCause() instanceof SQLIntegrityConstraintViolationException)
-                    return "like already exists";
-                return "error accessing db";
-            }
+            planRepository.findById(planId)
+                    .orElseThrow(()-> new IllegalArgumentException(String.format("plan not found")));
+            planRepository.likePlan(userId,planId);
+            planRepository.upLike(planId);
+            return "like complete";
         }
 
     }
 
     @Transactional
     public String scrapPlan(long planId, long userId) {
-
-        try {
-            if (planRepository.findById(planId).isPresent()) {
-                if(planRepository.isScrapped(planId, userId)) {
-                    return "already scrapped";
-                }
-                planRepository.scrapPlan(userId, planId);
-                planRepository.upScrap(planId);
-                return "scrap complete";
-            } else
-                return "no plan exists";
-        } catch(DataAccessException e) {
-            if(e.getCause() instanceof SQLIntegrityConstraintViolationException) {
-                return "already scrap error";
-            }
-            return "error accessing db";
-        }
+        planRepository.findById(planId)
+                .orElseThrow(()-> new IllegalArgumentException(String.format("no plan exists")));
+        planRepository.scrapPlan(userId,planId);
+        planRepository.upScrap(planId);
+        return "scrap complete";
     }
+
     @Transactional
     public List<PlanListResponseDTO> getHottestPlan(Long userId) {
 
         List<PlanListResponseDTO> top10Plans = planListRepository.findHottestPlan();
-        /*
-        for(PlanListResponseDTO plan : top10Plans){
-            if(userId == null){
-                plan.setIsScrapped(false);
-                plan.setIsLiked(false);
-            } else {
-                plan.setIsLiked(planRepository.isLiked(plan.getPlanId(), userId));
-                plan.setIsScrapped(planRepository.isScrapped(plan.getPlanId(), userId));
-            }
-        }
-
-         */
         return top10Plans;
     }
 
