@@ -1,4 +1,4 @@
-package Trabook.PlanManager.dto;
+package Trabook.PlanManager.dto.DestinationDto;
 
 import Trabook.PlanManager.domain.destination.Place;
 import Trabook.PlanManager.domain.destination.PlaceComment;

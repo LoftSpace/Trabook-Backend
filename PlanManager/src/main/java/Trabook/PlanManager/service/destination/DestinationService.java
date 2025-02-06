@@ -1,19 +1,15 @@
 package Trabook.PlanManager.service.destination;
 
 import Trabook.PlanManager.domain.destination.*;
-import Trabook.PlanManager.dto.DestinationReactionDto;
-import Trabook.PlanManager.dto.GetPlaceResponseDto;
-import Trabook.PlanManager.dto.PlaceForModalDTO;
+import Trabook.PlanManager.dto.DestinationDto.GetPlaceResponseDto;
+import Trabook.PlanManager.dto.DestinationDto.PlaceForModalDTO;
 import Trabook.PlanManager.repository.destination.DestinationRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DestinationService {

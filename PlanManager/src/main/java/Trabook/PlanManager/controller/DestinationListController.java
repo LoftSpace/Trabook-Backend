@@ -1,11 +1,11 @@
 package Trabook.PlanManager.controller;
 
 import Trabook.PlanManager.dto.CustomPlaceListDTO;
-import Trabook.PlanManager.dto.PlaceForModalDTO;
+import Trabook.PlanManager.dto.DestinationDto.PlaceForModalDTO;
 import Trabook.PlanManager.service.destination.DestinationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -20,8 +20,8 @@ public class DestinationListController {
 
     @ResponseBody
     @GetMapping("/popular")
-    public List<PlaceForModalDTO> getHottestPlace(@RequestHeader(value = "userId", required = false) Long userId) {
-        return destinationService.getHottestPlace(userId);
+    public ResponseEntity<List<PlaceForModalDTO>> getHottestPlace(@RequestHeader(value = "userId", required = false) Long userId) {
+        return ResponseEntity.ok().body(destinationService.getHottestPlace(userId));
     }
 
 
@@ -36,7 +36,6 @@ public class DestinationListController {
             @RequestParam Integer pageNum,
             @RequestParam Boolean userScrapOnly,
             @RequestHeader(required = false) Integer userId) {
-        log.info("/places/general");
 
         List<PlaceForModalDTO> customPlaceList = destinationService.getUserCustomPlaceList(search, state, category, sorts, userId, userScrapOnly);
 

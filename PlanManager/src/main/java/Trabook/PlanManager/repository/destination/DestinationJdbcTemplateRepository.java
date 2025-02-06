@@ -3,7 +3,7 @@ package Trabook.PlanManager.repository.destination;
 import Trabook.PlanManager.domain.comment.Comment;
 import Trabook.PlanManager.domain.destination.Place;
 import Trabook.PlanManager.domain.destination.PlaceComment;
-import Trabook.PlanManager.dto.PlaceForModalDTO;
+import Trabook.PlanManager.dto.DestinationDto.PlaceForModalDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import javax.sql.DataSource;

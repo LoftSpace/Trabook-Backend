@@ -1,16 +1,13 @@
 package Trabook.PlanManager.controller;
 
-import Trabook.PlanManager.dto.GetPlaceResponseDto;
-import Trabook.PlanManager.dto.PlaceScrapRequestDTO;
-import Trabook.PlanManager.response.ResponseMessage;
+import Trabook.PlanManager.dto.DestinationDto.GetPlaceResponseDto;
+import Trabook.PlanManager.dto.DestinationDto.PlaceScrapRequestDTO;
 import Trabook.PlanManager.service.destination.DestinationService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Objects;
 
 @Slf4j
 @RestController
@@ -30,7 +27,6 @@ public class DestinationController {
         if(placeId == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("placeId 없음");
-
         GetPlaceResponseDto getPlaceResponseDto = destinationService.getPlaceModalByPlaceId(placeId);
         getPlaceResponseDto.setIsScrapped(isScrapped(placeId, userId));
         return ResponseEntity.ok(getPlaceResponseDto);

@@ -1,5 +1,6 @@
 package Trabook.PlanManager.dto;
 
+import Trabook.PlanManager.dto.DestinationDto.PlaceForModalDTO;
 import lombok.Data;
 
 import java.util.List;

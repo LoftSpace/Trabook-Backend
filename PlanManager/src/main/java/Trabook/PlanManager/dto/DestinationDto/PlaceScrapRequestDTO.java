@@ -1,4 +1,4 @@
-package Trabook.PlanManager.dto;
+package Trabook.PlanManager.dto.DestinationDto;
 
 import lombok.*;
 
