@@ -97,6 +97,10 @@ public class DestinationService {
                 .orElseThrow(() -> new EntityNotFoundException("여행지 없음"));
         List<PlaceComment> comments = destinationRepository.findCommentsByPlaceId(placeId);
         List<String> photos = destinationRepository.findPhotosByPlaceId(placeId);
-        return new GetPlaceResponseDto(place,comments,photos);
+        return GetPlaceResponseDto.builder()
+                .place(place)
+                .comments(comments)
+                .photos(photos)
+                .build();
     }
 }
