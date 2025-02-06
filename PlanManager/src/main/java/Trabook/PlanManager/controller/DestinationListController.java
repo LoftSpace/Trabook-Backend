@@ -3,6 +3,7 @@ package Trabook.PlanManager.controller;
 import Trabook.PlanManager.dto.CustomPlaceListDTO;
 import Trabook.PlanManager.dto.PlaceForModalDTO;
 import Trabook.PlanManager.service.destination.DestinationService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,16 +13,10 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/places")
 public class DestinationListController {
     private final DestinationService destinationService;
-
-
-    @Autowired
-    public DestinationListController(DestinationService destinationService) {
-        this.destinationService = destinationService;
-
-    }
 
     @ResponseBody
     @GetMapping("/popular")
