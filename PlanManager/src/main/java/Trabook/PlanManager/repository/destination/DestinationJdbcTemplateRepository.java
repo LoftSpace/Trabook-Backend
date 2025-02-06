@@ -235,11 +235,9 @@ review 추가되면 review 랑 조인 + ORDER BY review DESC 필요
                 place.setCityId(rs.getLong("cityId"));
                 place.setImgSrc(rs.getString("imageSrc"));
                 place.setStar(rs.getLong("star"));
-                //place.setRatingScore(rs.getDouble("ratingScore"));
                 place.setAddress(rs.getString("address"));
-                place.setIsScrapped(rs.getBoolean("isScrapped"));
+
                 place.setScraps(rs.getInt("scraps"));
-                //place.setZipcode(rs.getString("zipcode"));
                 place.setDescription(rs.getString("description"));
                 place.setNumOfReview(rs.getInt("numOfReview"));
 
@@ -261,7 +259,7 @@ review 추가되면 review 랑 조인 + ORDER BY review DESC 필요
                 } while (rs.next() && rs.getLong("placeId") == place.getPlaceId());
 
                 // PlaceForModalDTO 객체 생성
-                return new PlaceForModalDTO(place, comments);
+                return new PlaceForModalDTO(place, comments,rs.getBoolean("isScrapped"));
 
             }
         };

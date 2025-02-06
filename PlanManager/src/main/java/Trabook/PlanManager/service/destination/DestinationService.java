@@ -52,70 +52,7 @@ public class DestinationService {
         else
             throw new EntityNotFoundException("스크랩 없음");
     }
-    @Transactional
-    public String addPlaceReaction(DestinationReactionDto destinationReactionDto) {
 
-        String reactionType = destinationReactionDto.getReactionType();
-        long userId = destinationReactionDto.getUserId();
-        long placeId = destinationReactionDto.getPlaceId();
-
-        if(reactionType.equals("LIKE")) {
-            if(destinationRepository.findByPlaceId(placeId).isPresent()) {
-                try {
-                    destinationRepository.addPlaceLike(userId, placeId);
-                    return "like complete";
-                } catch(DataAccessException e) {
-                    if(e.getCause() instanceof SQLIntegrityConstraintViolationException) {
-                        return "already liked";
-                    }
-                    return "error accessing db";
-                }
-            }
-            return "no place";
-        }
-        else if(reactionType.equals("SCRAP")) {
-            if(destinationRepository.findByPlaceId(placeId).isPresent()){
-                try {
-                    destinationRepository.addPlaceScrap(userId, placeId);
-                    return "scrap complete";
-                } catch(DataAccessException e) {
-                    if(e.getCause() instanceof SQLIntegrityConstraintViolationException) {
-                        return "already scrapped";
-                    }
-                    return "error accessing db";
-                }
-            }
-            return "no place";
-        }
-        else
-            return "type invalid";
-
-    }
-    @Transactional
-    public String deletePlaceReaction(DestinationReactionDto destinationReactionDto) {
-        String reactionType = destinationReactionDto.getReactionType();
-        long userId = destinationReactionDto.getUserId();
-        long placeId = destinationReactionDto.getPlaceId();
-
-        if(reactionType.equals("LIKE")) {
-            if(destinationRepository.deletePlaceLike(userId,placeId)==1) {
-                destinationRepository.likeDown(placeId);
-                return "delete like complete";
-            }
-            else
-                return "can't delete null";
-        }
-        else if(reactionType.equals("SCRAP")) {
-            if(destinationRepository.deletePlaceScrap(userId,placeId)==1) {
-                destinationRepository.scrapDown(placeId);
-                return "delete scrap complete";
-            }
-            else
-                return "can't delete null";
-        }
-        else
-            return "type invalid";
-    }
 
     @Transactional
     public List<PlaceForModalDTO> getUserCustomPlaceList(String search,
@@ -127,39 +64,43 @@ public class DestinationService {
         return destinationRepository.findCustomPlaceList(search, state, category, sorts, userId, userScrapOnly);
     }
 
-    @Transactional
+
     public boolean isScrapPlace(long placeId,long userId) {
         return destinationRepository.isScrapped(placeId,userId);
     }
 
     public List<PlaceForModalDTO> getHottestPlace(Long userId){
-        List<Place> top10Places = destinationRepository.findHottestPlaceList();
-        List<PlaceForModalDTO> result = new ArrayList<>();
+        List<Place> hottestPlaceList = destinationRepository.findHottestPlaceList();
+        List<PlaceForModalDTO> hottestPlaceModalList = new ArrayList<>();
 
-        for(Place place : top10Places){
-            if(userId == null) {
-                place.setIsScrapped(false);
-            }else {
-                place.setIsScrapped(destinationRepository.isScrapped(place.getPlaceId(), userId));
-            }
-
-            List<PlaceComment> comments = destinationRepository.findCommentsByPlaceId(place.getPlaceId());
-
-            result.add(new PlaceForModalDTO(place, comments));
+        for(Place place : hottestPlaceList){
+            hottestPlaceModalList.add(changeToModal(userId,place));
         }
-        return result;
+        return hottestPlaceModalList;
     }
 
-
-    public Optional<Place> getPlaceByPlaceId(long placeId) {
-        return destinationRepository.findByPlaceId(placeId);
+    private PlaceForModalDTO changeToModal(Long userId, Place place) {
+        boolean isScrapped = checkScrap(userId, place.getPlaceId());
+        return PlaceForModalDTO.builder()
+                .place(place)
+                .comments(destinationRepository.findCommentsByPlaceId(place.getPlaceId()))
+                .isScrapped(isScrapped)
+                .build();
     }
 
-    public GetPlaceResponseDto getPlaceModalByPlaceId(Long placeId)  {
-        Place place = destinationRepository.findByPlaceId(placeId).get();
+    private boolean checkScrap(Long userId, long placeId) {
+        if(userId == null) {
+            return false;
+        }else {
+            return destinationRepository.isScrapped(placeId,userId);
+        }
+    }
+
+    public GetPlaceResponseDto getPlaceModalByPlaceId(Long placeId) {
+        Place place = destinationRepository.findByPlaceId(placeId)
+                .orElseThrow(() -> new EntityNotFoundException("여행지 없음"));
         List<PlaceComment> comments = destinationRepository.findCommentsByPlaceId(placeId);
         List<String> photos = destinationRepository.findPhotosByPlaceId(placeId);
-
         return new GetPlaceResponseDto(place,comments,photos);
     }
 }

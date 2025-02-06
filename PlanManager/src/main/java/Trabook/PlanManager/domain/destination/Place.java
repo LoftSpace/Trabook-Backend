@@ -24,6 +24,5 @@ public class Place {
     private Integer scraps;
     private Integer numOfAdded;
     private Integer numOfReview;
-    private Boolean isScrapped;
 
 }

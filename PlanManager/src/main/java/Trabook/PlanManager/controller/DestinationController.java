@@ -27,20 +27,21 @@ public class DestinationController {
     @ResponseBody
     @GetMapping("")
     public ResponseEntity<?> getPlaceByPlaceId(@RequestParam("placeId") Long placeId, @RequestHeader(value = "userId",required = false)Long userId ){
-        if(placeId == null) {
+        if(placeId == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("planId 없음");
-        }
-        GetPlaceResponseDto result = destinationService.getPlaceModalByPlaceId(placeId);
+                    .body("placeId 없음");
 
-        if(userId != null) {
-             result.getPlace().setIsScrapped(destinationService.isScrapPlace(placeId,userId));
-        } else{
-            result.getPlace().setIsScrapped(false);
-        }
-        return ResponseEntity.ok(result);
+        GetPlaceResponseDto getPlaceResponseDto = destinationService.getPlaceModalByPlaceId(placeId);
+        getPlaceResponseDto.setIsScrapped(isScrapped(placeId, userId));
+        return ResponseEntity.ok(getPlaceResponseDto);
     }
 
+    private boolean isScrapped(Long placeId, Long userId) {
+        if(userId == null)
+            return false;
+        else
+            return destinationService.isScrapPlace(placeId,userId);
+    }
 
 
     @ResponseBody
