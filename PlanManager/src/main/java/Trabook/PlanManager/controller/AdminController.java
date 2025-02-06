@@ -1,19 +1,12 @@
 package Trabook.PlanManager.controller;
 
-import Trabook.PlanManager.domain.destination.Place;
-import Trabook.PlanManager.domain.destination.PlaceForModalDTO;
 import Trabook.PlanManager.response.PlanListResponseDTO;
 import Trabook.PlanManager.service.PlanService;
-import Trabook.PlanManager.service.destination.DestinationRedisService;
-import Trabook.PlanManager.service.destination.DestinationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.*;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,22 +18,12 @@ import java.util.List;
 @RequestMapping("/plan/admin")
 public class AdminController {
 
-/*
-    @Autowired
-    private RedisOperations<String,Place> operations;
 
-    @Resource(name="redisTemplate")
-    private ZSetOperations<String,Place> zsetOps;
-
-
- */
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
     private final RedisTemplate<String, String> redisTemplate;
-   // private final DestinationService destinationService;
-    //private final DestinationRedisService destinationRedisService;
-    private final PlanService planService;
+     private final PlanService planService;
 
     @Autowired
     public AdminController(RedisTemplate<String, String> redisTemplate,

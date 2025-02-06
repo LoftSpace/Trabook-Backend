@@ -1,11 +1,8 @@
 package Trabook.PlanManager.controller;
 
-import Trabook.PlanManager.domain.destination.CustomPlaceListDTO;
-import Trabook.PlanManager.domain.destination.Place;
-import Trabook.PlanManager.domain.destination.PlaceForModalDTO;
-import Trabook.PlanManager.service.destination.DestinationRedisService;
+import Trabook.PlanManager.dto.CustomPlaceListDTO;
+import Trabook.PlanManager.dto.PlaceForModalDTO;
 import Trabook.PlanManager.service.destination.DestinationService;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

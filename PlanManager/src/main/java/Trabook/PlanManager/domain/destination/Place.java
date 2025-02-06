@@ -9,13 +9,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Place {
-    private Long placeId;
-    private Long cityId;
+    private long placeId;
+    private long cityId;
     private String address;
     private String placeName;
     private String description;
-    private Double latitude;
-    private Double longitude;
+    private double latitude;
+    private double longitude;
     private Long star;
     private String category;
     private String imgSrc;

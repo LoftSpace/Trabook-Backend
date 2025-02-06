@@ -1,7 +1,6 @@
-package Trabook.PlanManager.domain.plan;
+package Trabook.PlanManager.dto;
 
-import Trabook.PlanManager.domain.destination.Place;
-import Trabook.PlanManager.domain.destination.PlaceComment;
+import Trabook.PlanManager.domain.plan.PlanComment;
 import Trabook.PlanManager.response.PlanListResponseDTO;
 import lombok.Getter;
 import lombok.Setter;

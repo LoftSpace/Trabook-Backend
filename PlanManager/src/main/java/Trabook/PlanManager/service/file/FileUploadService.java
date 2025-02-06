@@ -26,15 +26,11 @@ public class FileUploadService {
     private final PlanRepository planRepository;
     @Value("${spring.cloud.gcp.storage.bucket}")
     private String bucketName;
-
     @Value("${spring.cloud.gcp.storage.project-id")
     private String projectId;
-
     private final Storage storage;
-    //private final String defaultImagePath = "planPhoto-thumbnail.png";
 
     public void uploadPlanImage(MultipartFile image,long planId) throws IOException {
-       // Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
         String ext = image.getContentType();
         log.info("content-type : {}",ext);
         String fileName = "planPhoto/"+Long.toString(planId);
@@ -46,21 +42,19 @@ public class FileUploadService {
                 image.getInputStream());
 
     }
+
     public String uploadDefaultImage(Long planId) throws FileNotFoundException {
         ClassLoader classLoader = getClass().getClassLoader();
-        //Path path = Paths.get(defaultImagePath);
         String fileName = "planPhoto/"+Long.toString(planId);
+
         try(InputStream inputStream = classLoader.getResourceAsStream("planPhoto-thumbnail.png")){
             if(inputStream == null){
                 throw new IOException("File not found in resources: planPhoto-thumbnail.png");
-
             }
             BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, fileName)
                     .setContentType("image/png")
                     .build();
             storage.create(blobInfo, inputStream);
-
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

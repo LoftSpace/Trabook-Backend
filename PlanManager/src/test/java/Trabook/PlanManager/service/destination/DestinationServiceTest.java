@@ -1,15 +1,5 @@
 package Trabook.PlanManager.service.destination;
 
-import Trabook.PlanManager.domain.destination.DestinationReactionDto;
-import Trabook.PlanManager.domain.destination.Place;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 /*
 @Transactional
 @SpringBootTest

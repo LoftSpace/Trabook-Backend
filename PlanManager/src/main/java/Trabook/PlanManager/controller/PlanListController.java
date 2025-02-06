@@ -1,17 +1,14 @@
 package Trabook.PlanManager.controller;
-import Trabook.PlanManager.domain.plan.CustomPlanListDTO;
-import Trabook.PlanManager.domain.plan.PlanGeneralDTO;
+import Trabook.PlanManager.dto.CustomPlanListDTO;
+import Trabook.PlanManager.dto.PlanGeneralDTO;
 import Trabook.PlanManager.response.PlanListResponseDTO;
-import Trabook.PlanManager.response.PlanResponseDTO;
 import Trabook.PlanManager.service.PlanRedisService;
 import Trabook.PlanManager.service.PlanService;
-import Trabook.PlanManager.service.destination.DestinationRedisService;
 import Trabook.PlanManager.service.planList.GetUserLikePlanList;
 import Trabook.PlanManager.service.planList.GetUserPlanList;
 import Trabook.PlanManager.service.planList.GetUserScrapPlanList;
 import Trabook.PlanManager.service.planList.PlanListServiceInterface;
 import Trabook.PlanManager.service.webclient.WebClientService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 

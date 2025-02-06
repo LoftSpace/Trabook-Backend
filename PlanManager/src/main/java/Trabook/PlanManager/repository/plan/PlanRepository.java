@@ -1,8 +1,9 @@
 package Trabook.PlanManager.repository.plan;
 
 import Trabook.PlanManager.domain.comment.Comment;
-import Trabook.PlanManager.domain.comment.CommentRequestDTO;
+import Trabook.PlanManager.dto.CommentRequestDTO;
 import Trabook.PlanManager.domain.plan.*;
+import Trabook.PlanManager.dto.PlanCreateDTO;
 import Trabook.PlanManager.response.PlanListResponseDTO;
 import Trabook.PlanManager.response.PlanResponseDTO;
 

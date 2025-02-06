@@ -1,7 +1,6 @@
-package Trabook.PlanManager.domain.plan;
+package Trabook.PlanManager.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter

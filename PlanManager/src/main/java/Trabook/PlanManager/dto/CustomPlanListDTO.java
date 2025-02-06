@@ -1,7 +1,4 @@
-package Trabook.PlanManager.domain.plan;
-
-import Trabook.PlanManager.domain.destination.Place;
-import Trabook.PlanManager.response.PlanListResponseDTO;
+package Trabook.PlanManager.dto;
 
 import java.util.List;
 

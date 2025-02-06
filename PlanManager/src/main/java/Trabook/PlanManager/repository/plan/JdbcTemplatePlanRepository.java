@@ -1,22 +1,18 @@
 package Trabook.PlanManager.repository.plan;
 
 import Trabook.PlanManager.domain.comment.Comment;
-import Trabook.PlanManager.domain.comment.CommentRequestDTO;
+import Trabook.PlanManager.dto.CommentRequestDTO;
 import Trabook.PlanManager.domain.plan.Plan;
-import Trabook.PlanManager.domain.plan.PlanCreateDTO;
+import Trabook.PlanManager.dto.PlanCreateDTO;
 import Trabook.PlanManager.domain.user.User;
-import Trabook.PlanManager.repository.customRowMapper.NestedRowMapper;
 import Trabook.PlanManager.response.PlanListResponseDTO;
 import Trabook.PlanManager.domain.plan.DayPlan;
 import Trabook.PlanManager.response.PlanResponseDTO;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;

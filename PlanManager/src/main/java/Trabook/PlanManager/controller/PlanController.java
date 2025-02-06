@@ -1,18 +1,17 @@
 package Trabook.PlanManager.controller;
 
 import Trabook.PlanManager.domain.comment.Comment;
-import Trabook.PlanManager.domain.comment.CommentRequestDTO;
 import Trabook.PlanManager.domain.plan.*;
 import Trabook.PlanManager.domain.user.User;
 
-import Trabook.PlanManager.domain.webclient.userInfoDTO;
+import Trabook.PlanManager.dto.PlanCreateDTO;
+import Trabook.PlanManager.dto.PlanCreateResponseDTO;
+import Trabook.PlanManager.dto.PlanIdDTO;
 import Trabook.PlanManager.response.*;
 
 import Trabook.PlanManager.service.PlanService;
 import Trabook.PlanManager.service.file.FileUploadService;
 import Trabook.PlanManager.service.webclient.WebClientService;
-
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +23,9 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import reactor.core.publisher.Mono;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 

@@ -1,9 +1,11 @@
 package Trabook.PlanManager.service;
 
 import Trabook.PlanManager.domain.comment.Comment;
-import Trabook.PlanManager.domain.comment.CommentRequestDTO;
+import Trabook.PlanManager.dto.CommentRequestDTO;
 import Trabook.PlanManager.domain.destination.Place;
 import Trabook.PlanManager.domain.plan.*;
+import Trabook.PlanManager.dto.PlanCreateDTO;
+import Trabook.PlanManager.dto.PlanGeneralDTO;
 import Trabook.PlanManager.repository.destination.DestinationRepository;
 import Trabook.PlanManager.repository.plan.PlanListRepository;
 import Trabook.PlanManager.repository.plan.PlanRepository;
@@ -325,12 +327,12 @@ public class PlanService {
 
     @Transactional
     public List<PlanGeneralDTO> findCustomPlanList(String search,
-                                                        List<String> state,
-                                                        Integer numOfPeople,
-                                                        Integer duration,
-                                                        String sorts,
-                                                        Integer userId,
-                                                        Boolean userScrapOnly) {
+                                                   List<String> state,
+                                                   Integer numOfPeople,
+                                                   Integer duration,
+                                                   String sorts,
+                                                   Integer userId,
+                                                   Boolean userScrapOnly) {
         return planListRepository.findCustomPlanList(search, state, numOfPeople, duration, sorts, userId, userScrapOnly);
     }
 

@@ -1,8 +1,8 @@
 package Trabook.PlanManager.service.webclient;
 
 import Trabook.PlanManager.domain.user.User;
-import Trabook.PlanManager.domain.webclient.UserListDTO;
-import Trabook.PlanManager.domain.webclient.userInfoDTO;
+import Trabook.PlanManager.dto.UserListDTO;
+import Trabook.PlanManager.dto.userInfoDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

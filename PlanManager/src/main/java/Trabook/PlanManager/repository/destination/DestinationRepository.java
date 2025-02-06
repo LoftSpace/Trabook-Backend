@@ -4,7 +4,7 @@ package Trabook.PlanManager.repository.destination;
 import Trabook.PlanManager.domain.comment.Comment;
 import Trabook.PlanManager.domain.destination.Place;
 import Trabook.PlanManager.domain.destination.PlaceComment;
-import Trabook.PlanManager.domain.destination.PlaceForModalDTO;
+import Trabook.PlanManager.dto.PlaceForModalDTO;
 
 import java.util.List;
 import java.util.Optional;

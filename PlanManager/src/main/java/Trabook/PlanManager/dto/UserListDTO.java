@@ -1,8 +1,7 @@
-package Trabook.PlanManager.domain.webclient;
+package Trabook.PlanManager.dto;
 
 import Trabook.PlanManager.domain.user.User;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;

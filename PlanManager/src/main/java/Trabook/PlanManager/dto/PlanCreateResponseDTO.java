@@ -1,4 +1,4 @@
-package Trabook.PlanManager.domain.plan;
+package Trabook.PlanManager.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

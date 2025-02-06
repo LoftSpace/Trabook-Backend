@@ -3,7 +3,7 @@ package Trabook.PlanManager.repository.destination;
 import Trabook.PlanManager.domain.comment.Comment;
 import Trabook.PlanManager.domain.destination.Place;
 import Trabook.PlanManager.domain.destination.PlaceComment;
-import Trabook.PlanManager.domain.destination.PlaceForModalDTO;
+import Trabook.PlanManager.dto.PlaceForModalDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import javax.sql.DataSource;
@@ -134,7 +134,7 @@ public class    DestinationJdbcTemplateRepository implements DestinationReposito
     }
     @Override
     public int deletePlaceScrap(long userId, long placeId) {
-        String sql = "DELETE FROM ScrappedPlace WHERE userId = ? AND placeId = ?"; //1번 쿼리 잘 안됐는데 2번쿼리 잘되는 거 고치기
+        String sql = "DELETE FROM ScrappedPlace WHERE userId = ? AND placeId = ?";
         return jdbcTemplate.update(sql,userId,placeId);
     }
     @Override

@@ -1,4 +1,4 @@
-package Trabook.PlanManager.domain.destination;
+package Trabook.PlanManager.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +8,8 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PlaceScrapRequestDTO {
+public class DestinationReactionDto {
+    private String reactionType;
+    private long userId;
     private long placeId;
 }

@@ -1,7 +1,7 @@
 package Trabook.PlanManager.service.destination;
 
 import Trabook.PlanManager.domain.destination.Place;
-import Trabook.PlanManager.domain.destination.SearchDestinationFilterDTO;
+import Trabook.PlanManager.dto.SearchDestinationFilterDTO;
 import Trabook.PlanManager.repository.destination.DestinationRepository;
 import org.springframework.stereotype.Service;
 

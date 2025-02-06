@@ -1,14 +1,14 @@
 package Trabook.PlanManager.service.destination;
 
 import Trabook.PlanManager.domain.destination.*;
+import Trabook.PlanManager.dto.DestinationReactionDto;
+import Trabook.PlanManager.dto.GetPlaceResponseDto;
+import Trabook.PlanManager.dto.PlaceForModalDTO;
 import Trabook.PlanManager.repository.destination.DestinationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
@@ -33,30 +33,24 @@ public class DestinationService {
     public List<Place> getPlaceListByUserScrap(long userId) {
         return destinationRepository.findPlaceListByUserScrap(userId);
     }
+
     @Transactional
-    public String addPlaceScrap(long userId, long placeId) {
-        if(destinationRepository.findByPlaceId(placeId).isPresent()) {
-            try {
-                destinationRepository.addPlaceScrap(userId, placeId);
-                return "scrap complete";
-            }catch (DataAccessException e) {
-                if(e.getCause() instanceof SQLIntegrityConstraintViolationException) {
-                    return "already scrap error";
-                }
-                return "error accessing db";
-            }
-        } else
-            return "no place exists";
+    public void addPlaceScrap(Long userId, Long placeId) throws EntityNotFoundException {
+        destinationRepository.findByPlaceId(placeId)
+                .orElseThrow(() -> new EntityNotFoundException("Place not found"));
+        destinationRepository.addPlaceScrap(userId, placeId);
     }
 
     @Transactional
-    public String deletePlaceScrap(long userId, long placeId) {
+    public void deletePlaceScrap(long userId, long placeId)  throws RuntimeException{
+        destinationRepository.findByPlaceId(placeId)
+                .orElseThrow(() -> new EntityNotFoundException("여행지 없음"));
+
         if(destinationRepository.deletePlaceScrap(userId,placeId)==1) {
             destinationRepository.scrapDown(placeId);
-            return "delete scrap complete";
         }
         else
-            return "can't delete null";
+            throw new EntityNotFoundException("스크랩 없음");
     }
     @Transactional
     public String addPlaceReaction(DestinationReactionDto destinationReactionDto) {
@@ -125,11 +119,11 @@ public class DestinationService {
 
     @Transactional
     public List<PlaceForModalDTO> getUserCustomPlaceList(String search,
-                                              List<String> state,
-                                              List<String> category,
-                                              String sorts,
-                                              Integer userId,
-                                              Boolean userScrapOnly) {
+                                                         List<String> state,
+                                                         List<String> category,
+                                                         String sorts,
+                                                         Integer userId,
+                                                         Boolean userScrapOnly) {
         return destinationRepository.findCustomPlaceList(search, state, category, sorts, userId, userScrapOnly);
     }
 
@@ -161,12 +155,11 @@ public class DestinationService {
         return destinationRepository.findByPlaceId(placeId);
     }
 
-    public PlaceForModalAddPictureDTO getPlaceModalByPlaceId(long placeId)  {
-        Optional<Place> place = destinationRepository.findByPlaceId(placeId);
+    public GetPlaceResponseDto getPlaceModalByPlaceId(Long placeId)  {
+        Place place = destinationRepository.findByPlaceId(placeId).get();
         List<PlaceComment> comments = destinationRepository.findCommentsByPlaceId(placeId);
-
         List<String> photos = destinationRepository.findPhotosByPlaceId(placeId);
 
-        return new PlaceForModalAddPictureDTO(place.get(),comments,photos);
+        return new GetPlaceResponseDto(place,comments,photos);
     }
 }

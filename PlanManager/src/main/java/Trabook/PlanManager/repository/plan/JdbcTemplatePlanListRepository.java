@@ -1,10 +1,7 @@
 package Trabook.PlanManager.repository.plan;
 
-import Trabook.PlanManager.domain.destination.PlaceComment;
-import Trabook.PlanManager.domain.destination.PlaceForModalDTO;
-import Trabook.PlanManager.domain.plan.Plan;
 import Trabook.PlanManager.domain.plan.PlanComment;
-import Trabook.PlanManager.domain.plan.PlanGeneralDTO;
+import Trabook.PlanManager.dto.PlanGeneralDTO;
 import Trabook.PlanManager.response.PlanListResponseDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

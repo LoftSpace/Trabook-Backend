@@ -1,11 +1,10 @@
 package Trabook.PlanManager.controller;
 
-import Trabook.PlanManager.domain.destination.DestinationReactionDto;
-import Trabook.PlanManager.domain.destination.PlaceForModalAddPictureDTO;
-import Trabook.PlanManager.domain.destination.PlaceForModalDTO;
-import Trabook.PlanManager.domain.destination.PlaceScrapRequestDTO;
+import Trabook.PlanManager.dto.GetPlaceResponseDto;
+import Trabook.PlanManager.dto.PlaceScrapRequestDTO;
 import Trabook.PlanManager.response.ResponseMessage;
 import Trabook.PlanManager.service.destination.DestinationService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +26,15 @@ public class DestinationController {
 
     @ResponseBody
     @GetMapping("")
-    public ResponseEntity<PlaceForModalAddPictureDTO> getPlaceByPlaceId(@RequestParam("placeId") long placeId, @RequestHeader(value = "userId",required = false)Long userId ){
-        PlaceForModalAddPictureDTO result = destinationService.getPlaceModalByPlaceId(placeId);
+    public ResponseEntity<?> getPlaceByPlaceId(@RequestParam("placeId") Long placeId, @RequestHeader(value = "userId",required = false)Long userId ){
+        if(placeId == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("planId 없음");
+        }
+        GetPlaceResponseDto result = destinationService.getPlaceModalByPlaceId(placeId);
 
         if(userId != null) {
-            //System.out.println(destinationService.isScrapPlace(placeId,userId));
-            //System.out.println("user Id = " + userId);
-            result.getPlace().setIsScrapped(destinationService.isScrapPlace(placeId,userId));
+             result.getPlace().setIsScrapped(destinationService.isScrapPlace(placeId,userId));
         } else{
             result.getPlace().setIsScrapped(false);
         }
@@ -44,23 +45,33 @@ public class DestinationController {
 
     @ResponseBody
     @PostMapping("/scrap")
-    public ResponseEntity<ResponseMessage> addPlaceScrap(@RequestBody PlaceScrapRequestDTO placeScrapRequestDTO, @RequestHeader("userId")long userId){
-
-        String message = destinationService.addPlaceScrap(userId, placeScrapRequestDTO.getPlaceId());
-
-        if (Objects.equals(message, "no place exists")){
-            return new ResponseEntity<>(new ResponseMessage("no plan exists"), HttpStatus.NOT_FOUND);
-        }else if(Objects.equals(message, "already scrap error")){
-            return new ResponseEntity<>(new ResponseMessage("already scrap error"), HttpStatus.CONFLICT);
+    public ResponseEntity<String> addPlaceScrap(@RequestBody PlaceScrapRequestDTO placeScrapRequestDTO, @RequestHeader("userId")Long userId){
+        if(userId == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("userId 없음");
+        try {
+            destinationService.addPlaceScrap(userId, placeScrapRequestDTO.getPlaceId());
+            return ResponseEntity.ok("스크랩 성공");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("해당 여행지 없음");
         }
-        return ResponseEntity.ok(new ResponseMessage(message));
     }
 
     @ResponseBody
     @DeleteMapping("/scrap")
-    public  ResponseEntity<ResponseMessage> deletePlaceScrap(@RequestBody PlaceScrapRequestDTO placeScrapRequestDTO,@RequestHeader("userId")long userId){
-        String message = destinationService.deletePlaceScrap(userId, placeScrapRequestDTO.getPlaceId());
-        return ResponseEntity.ok(new ResponseMessage(message));
+    public  ResponseEntity<String> deletePlaceScrap(@RequestBody PlaceScrapRequestDTO placeScrapRequestDTO,@RequestHeader("userId")Long userId){
+        if(userId == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("userId 없음");
+        try {
+            destinationService.deletePlaceScrap(userId, placeScrapRequestDTO.getPlaceId());
+            return ResponseEntity.ok("스크랩 삭제 성공");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(e.getMessage());
+        }
+
     }
 
 

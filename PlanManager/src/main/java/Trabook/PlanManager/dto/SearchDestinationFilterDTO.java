@@ -1,4 +1,4 @@
-package Trabook.PlanManager.domain.destination;
+package Trabook.PlanManager.dto;
 
 public class SearchDestinationFilterDTO {
     public SearchDestinationFilterDTO() {}

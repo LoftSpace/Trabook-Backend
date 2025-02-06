@@ -1,18 +1,14 @@
 package Trabook.PlanManager.service.comment;
 
-import Trabook.PlanManager.domain.comment.CommentRequestDTO;
+import Trabook.PlanManager.dto.CommentRequestDTO;
 import Trabook.PlanManager.domain.plan.Plan;
-import Trabook.PlanManager.domain.plan.PlanCreateDTO;
 import Trabook.PlanManager.repository.plan.PlanRepository;
-import Trabook.PlanManager.response.CommentUpdateResponseDTO;
 import Trabook.PlanManager.service.PlanService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -45,7 +41,7 @@ public class CommentServiceParallelTest {
             int commentNumber = i + 1;
             executorService.submit(() ->  {
                 try {
-                    planService.addComment(new CommentRequestDTO(0,3,580,"testContent"+commentNumber,0,0,"2024-10-13T16:18:35.911Z"));
+                    planService.addComment(new CommentRequestDTO(0,3,580,0,0,"0","2024-10-13T16:18:35.911Z"));
                 } catch( Exception e){
                     System.out.println(e);
                 } finally {
