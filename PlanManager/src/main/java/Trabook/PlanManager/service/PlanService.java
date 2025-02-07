@@ -177,7 +177,7 @@ public class PlanService {
     public long addComment(CommentRequestDTO comment) {
         long planId = comment.getPlanId();
         planRepository.findById(planId)
-                 .orElseThrow(() -> new IllegalArgumentException(String.format("plan not found")));
+                 .orElseThrow(() -> new IllegalArgumentException(String.format("Plan 찾을 수 없음")));
         planRepository.increaseCommentCount(planId);
         return planRepository.addComment(comment);
     }

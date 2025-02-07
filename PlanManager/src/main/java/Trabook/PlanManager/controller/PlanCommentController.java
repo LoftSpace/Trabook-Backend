@@ -22,18 +22,19 @@ public class PlanCommentController {
         if(userId == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("userId 없음");
 
-        comment.setUserId(userId);
-        planService.addComment(comment);
-        CommentUpdateResponseDTO commentUpdateResponseDTO = new CommentUpdateResponseDTO();
         try {
-            commentUpdateResponseDTO.setCommentId(planService.addComment(comment));
-            commentUpdateResponseDTO.setMessage("comment added");
-            return ResponseEntity.ok(commentUpdateResponseDTO);
-        } catch (IllegalArgumentException e){
-            commentUpdateResponseDTO.setMessage("no plan exists");
-            return new ResponseEntity<>(commentUpdateResponseDTO, HttpStatus.NOT_FOUND);
-        }
+            comment.setUserId(userId);
+            long providedCommentId = planService.addComment(comment);
+            return ResponseEntity.ok(
+                    CommentUpdateResponseDTO.builder()
+                            .commentId(providedCommentId)
+                            .message("댓글 작성 성공")
+                            .build());
 
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(e.getMessage());
+        }
     }
 
     @ResponseBody
