@@ -39,7 +39,7 @@ public class PlanCommentController {
 
     @ResponseBody
     @DeleteMapping("")
-    public ResponseEntity<ResponseMessage> deleteComment(@RequestParam("commentId") long commentId, @RequestHeader("userId") long userId) {
+    public ResponseEntity<ResponseMessage> deleteComment(@RequestParam("commentId") Long commentId, @RequestHeader("userId") Long userId) {
         Comment comment = new Comment();
         try{
             comment = planService.getComment(commentId);

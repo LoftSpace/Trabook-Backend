@@ -107,48 +107,6 @@ public class PlanController {
         return result;
     }
 
-/*
-    @ResponseBody
-    @GetMapping("")
-    public Mono<ResponseEntity<PlanResponseDTO>> getPlanByPlanId(@RequestParam("planId")long planId, @RequestHeader(value = "userId", required = false) Long userId) {
-
-        // part 1 : get plan and plan owner Info
-        PlanResponseDTO result = planService.getPlan(planId, userId);
-        if(result == null){
-            return Mono.just(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-        }
-
-        long planOwnerId = result.getPlan().getUserId();
-        Mono<userInfoDTO> userInfo = webClientService.getUserInfo(planOwnerId);
-
-        // part 2 : get comments and comments' user Info
-        List<Long> commentUserIds = new ArrayList<>();
-        List<Comment> commentList = result.getComments();
-        for(Comment comment : commentList ) {
-            long commentUserId = comment.getUser().getUserId();
-            commentUserIds.add(commentUserId);
-
-        }
-        // 이 부분을 굳이 non-blocking으로 처리할 필요?
-        Mono<List<User>> commentUserListInfo = commentUserIds.isEmpty() ? Mono.just(Collections.emptyList()) : webClientService.getUserListInfo(commentUserIds);
-
-        return Mono.zip(userInfo,commentUserListInfo)
-                .map(tuple -> {
-                    result.setUser(tuple.getT1().getUser());
-                    List<User> users= tuple.getT2();
-
-                    for (int indexOfUserList = 0; indexOfUserList < users.size(); indexOfUserList++) {
-                        result.getComments().get(indexOfUserList).setUser(users.get(indexOfUserList));
-                    }
-
-                   return new ResponseEntity<>(result, HttpStatus.OK);
-                });
-
-    }
-
-
- */
-
 
     @ResponseBody
     @PostMapping("/test")
