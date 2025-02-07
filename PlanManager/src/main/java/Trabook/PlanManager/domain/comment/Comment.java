@@ -20,5 +20,9 @@ public class Comment {
     private int refOrder;
     private String time;
 
+    public boolean isRootComment(){
+        return this.refOrder == 0;
+
+    }
 
 }

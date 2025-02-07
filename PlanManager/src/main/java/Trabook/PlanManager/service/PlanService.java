@@ -275,13 +275,10 @@ public class PlanService {
     public void deleteComment(long commentId) {
         Comment comment = planRepository.findCommentById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException(String.format("댓글 찾을 수 없음")));
-        // 대댓글인지 확인
-        if(comment.getRefOrder()==0) {
+        if(comment.isRootComment())
             planRepository.deleteCommentByRef(comment.getParentId(),commentId, comment.getPlanId());
-        } else {
+        else
             planRepository.deleteComment(commentId);
-        }
-
     }
 
     @Transactional
