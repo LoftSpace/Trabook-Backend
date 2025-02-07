@@ -1,9 +1,11 @@
 package Trabook.PlanManager.service;
 
 import Trabook.PlanManager.domain.comment.Comment;
+import Trabook.PlanManager.domain.user.User;
 import Trabook.PlanManager.dto.CommentRequestDto;
 import Trabook.PlanManager.domain.destination.Place;
 import Trabook.PlanManager.domain.plan.*;
+import Trabook.PlanManager.dto.CommentWithUser;
 import Trabook.PlanManager.dto.PlanCreateDto;
 import Trabook.PlanManager.dto.PlanGeneralDto;
 import Trabook.PlanManager.repository.destination.DestinationRepository;
@@ -12,6 +14,7 @@ import Trabook.PlanManager.repository.plan.PlanRepository;
 import Trabook.PlanManager.response.PlanListResponseDTO;
 import Trabook.PlanManager.response.PlanResponseDTO;
 import Trabook.PlanManager.service.destination.PointDeserializer;
+import Trabook.PlanManager.service.webclient.WebClientService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -35,7 +38,7 @@ public class PlanService {
     private final DestinationRepository destinationRepository;
     private final PlanListRepository planListRepository;
     private final RedisTemplate<String, String> redisTemplate;
-
+    private final WebClientService webClientService;
     @Transactional
     public long createPlan(PlanCreateDto planCreateDTO) {
         return planRepository.createPlan(planCreateDTO);
@@ -194,49 +197,79 @@ public class PlanService {
         return comment;
 
     }
+    public PlanResponseDTO handleTotalPlanRequest(long planId,Long userId){
+        PlanResponseDTO totalPlan = planRepository.findTotalPlan(planId);
+        Plan plan = totalPlan.getPlan();
+        List<Place> placeList = destinationRepository.findPlaceListByPlanId(planId);
+        // get vs set ???
+        setPlanOwner(plan.getUserId(),totalPlan);
+        setCommentsWithUsers(planId, totalPlan);
+        setDetailPlaceInfo(plan,placeList);
 
-    @Transactional
-    public PlanResponseDTO getPlan(long planId, Long userId) {
+        totalPlan.isLiked(isPlanLiked(planId, userId));
+        totalPlan.isScrapped(isPlanScrapped(planId,userId));
+        totalPlan.setTags(getTags(placeList));
+        return totalPlan;
+    }
 
-        PlanResponseDTO result = planRepository.findTotalPlan(planId);
-        Plan plan = result.getPlan();
+    private boolean isPlanLiked(long planId, Long userId) {
+        if(userId == null)
+            return false;
+        else
+            return planRepository.isLiked(planId, userId);
+    }
+    private boolean isPlanScrapped(long planId, Long userId){
+        if(userId == null)
+            return false;
+        else
+            return planRepository.isScrapped(planId,userId);
+    }
 
+    private void setCommentsWithUsers(long planId, PlanResponseDTO totalPlan) {
+        
+        List<Comment> commentList = planRepository.findCommentListByPlanId(planId);
+        //각 댓글의 유저데이터 가져오기
+        List<Long> commentUserIdList = getCommentUserList(commentList);
+        List<User> userList = webClientService.getUserInfoList(commentUserIdList);
+        List<CommentWithUser> commentWithUserList = createCommentWithUserList(userList, commentList);
+        totalPlan.setComments(commentWithUserList);
+
+    }
+
+    private static List<CommentWithUser> createCommentWithUserList(List<User> users, List<Comment> commentList) {
+        List<CommentWithUser> commentWithUserList = new ArrayList<>();
+        for(int indexOfUserList = 0; indexOfUserList < users.size(); indexOfUserList++){
+            Comment comment = commentList.get(indexOfUserList);
+            User user = users.get(indexOfUserList);
+            commentWithUserList.add(new CommentWithUser(comment,user));
+        }
+        return commentWithUserList;
+    }
+
+    private static List<Long> getCommentUserList(List<Comment> commentList) {
+        List<Long> commentUserIds = new ArrayList<>();
+        for(Comment comment : commentList) {
+            long commentUserId = comment.getUserId();
+            commentUserIds.add(commentUserId);
+        }
+        return commentUserIds;
+    }
+
+    private void setPlanOwner(long planOwnerId, PlanResponseDTO totalPlan) {
+        User planOwner = webClientService.getUserInfo(planOwnerId);
+        totalPlan.setPlanOwner(planOwner);
+    }
+
+    private void setDetailPlaceInfo(Plan plan,List<Place> placeList) {
         List<DayPlan> dayPlanList = plan.getDayPlanList();
-
-        List<Place> placeList = destinationRepository.findPlaceListByPlanId(plan.getPlanId());
         int placeIndex = 0;
-
         for(DayPlan dayPlan : dayPlanList) {
             for(DayPlan.Schedule schedule : dayPlan.getScheduleList()) {
                 Place place = placeList.get(placeIndex);
-                schedule.setImageSrc(place.getImgSrc());
-                schedule.setLongitude(place.getLongitude());
-                schedule.setLatitude(place.getLatitude());
-                schedule.setPlaceName(place.getPlaceName());
-                schedule.setSubcategory(place.getSubcategory());
-                schedule.setAddress(place.getAddress());
+                schedule.addDetails(place);
                 placeIndex ++;
             }
-
         }
-
-        boolean isLiked;
-        boolean isScrapped;
-        if(userId == null){
-            isLiked = false;
-            isScrapped = false;
-        } else {
-            isLiked = planRepository.isLiked(planId, userId);
-            isScrapped = planRepository.isScrapped(planId, userId);
-        }
-        result.setLiked(isLiked);
-        result.setScrapped(isScrapped);
-        result.setTags(getTags(placeList));
-        List<Comment> comments = planRepository.findCommentListByPlanId(planId);
-        result.setComments(comments);
-        return result;
-
-
     }
 
 

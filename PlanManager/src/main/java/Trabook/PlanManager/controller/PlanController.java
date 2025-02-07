@@ -85,26 +85,12 @@ public class PlanController {
 
     @ResponseBody
     @GetMapping("")
-    public PlanResponseDTO getPlanByPlanId(@RequestParam("planId")long planId, @RequestHeader(value = "userId", required = false) Long userId) throws InterruptedException {
-        PlanResponseDTO result = planService.getPlan(planId,userId);
-
-        long planOwnerId = result.getPlan().getUserId();
-
-        User planOwner = webClientService.getUserInfoBlocking(planOwnerId);
-        result.setUser(planOwner);
-
-        List<Long> commentUserIds = new ArrayList<>();
-        List<Comment> commentList = result.getComments();
-        for(Comment comment : commentList ) {
-            long commentUserId = comment.getUser().getUserId();
-            commentUserIds.add(commentUserId);
+    public ResponseEntity<?> getPlanByPlanId(@RequestParam("planId")Long planId, @RequestHeader(value = "userId", required = false) Long userId) throws InterruptedException {
+        if(planId == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("planId 없음");
         }
-        List<User> users = webClientService.getUserInfoListBlocking(commentUserIds);
-        for (int indexOfUserList = 0; indexOfUserList < users.size(); indexOfUserList++) {
-            result.getComments().get(indexOfUserList).setUser(users.get(indexOfUserList));
-        }
-
-        return result;
+        PlanResponseDTO planResponseDTO = planService.handleTotalPlanRequest(planId, userId);
+        return ResponseEntity.ok(planResponseDTO);
     }
 
 
@@ -149,7 +135,7 @@ public class PlanController {
     @ResponseBody
     @DeleteMapping("")
     public ResponseEntity<ResponseMessage> deletePlan(@RequestParam("planId") long planId,@RequestHeader("userId") long userId) {
-        PlanResponseDTO plan = planService.getPlan(planId, userId);
+        PlanResponseDTO plan = planService.getTotalPlan(planId, userId);
         System.out.println(plan.getPlan().getUserId());
         if(plan.getPlan().getUserId() != userId)
             return new ResponseEntity<>(new ResponseMessage("you have no access to this plan"),HttpStatus.BAD_REQUEST);

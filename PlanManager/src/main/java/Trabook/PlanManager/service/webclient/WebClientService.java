@@ -26,7 +26,7 @@ public class WebClientService {
     @Autowired
     WebClient webClient;
 
-    public User getUserInfoBlocking(long userId) {
+    public User getUserInfo(long userId) {
 
         URI uri = UriComponentsBuilder
                 .fromUriString("http://35.216.63.121:4060")
@@ -42,7 +42,7 @@ public class WebClientService {
         return result.getBody().getUser();
     }
 
-    public List<User> getUserInfoListBlocking(List<Long> userIdList) {
+    public List<User> getUserInfoList(List<Long> userIdList) {
         // User ID 리스트를 문자열로 변환
         String userIdsString = userIdList.stream()
                 .map(String::valueOf)

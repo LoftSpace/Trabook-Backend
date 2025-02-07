@@ -1,5 +1,7 @@
 package Trabook.PlanManager.domain.plan;
 
+import Trabook.PlanManager.domain.destination.Place;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,21 +36,20 @@ public class DayPlan {
         private int stars;
         private int numOfAdded;
         private int numOfReview;
-        //private int scraps;
+
 
 
         public Schedule() {}
 
-        public Schedule(long planId, int day, int order, int time, long placeId, String imageSrc, String placeName, double latitude, double longitude) {
-            this.planId = planId;
-            this.day = day;
-            this.order = order;
-            this.time = time;
-            this.placeId = placeId;
-            this.imageSrc = imageSrc;
-            this.placeName = placeName;
-            this.latitude = latitude;
-            this.longitude = longitude;
+
+        public void addDetails(Place place) {
+            this.placeId = place.getPlaceId();
+            this.imageSrc = place.getImgSrc();
+            this.latitude = place.getLatitude();
+            this.longitude = place.getLongitude();
+            this.placeName = place.getPlaceName();
+            this.subcategory = place.getSubcategory();
+            this.address = place.getAddress();
         }
     }
     public DayPlan() {}
