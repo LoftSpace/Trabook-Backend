@@ -51,7 +51,7 @@ public class DestinationController {
             return ResponseEntity.ok("스크랩 성공");
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("해당 여행지 없음");
+                    .body(e.getMessage());
         }
     }
 

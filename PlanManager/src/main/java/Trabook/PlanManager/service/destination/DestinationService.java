@@ -33,7 +33,7 @@ public class DestinationService {
     @Transactional
     public void addPlaceScrap(Long userId, Long placeId) throws EntityNotFoundException {
         destinationRepository.findByPlaceId(placeId)
-                .orElseThrow(() -> new EntityNotFoundException("Place not found"));
+                .orElseThrow(() -> new EntityNotFoundException("여행지 없음"));
         destinationRepository.addPlaceScrap(userId, placeId);
     }
 

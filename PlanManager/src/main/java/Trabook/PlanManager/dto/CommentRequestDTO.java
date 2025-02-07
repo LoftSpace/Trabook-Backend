@@ -1,17 +1,13 @@
 package Trabook.PlanManager.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentRequestDTO {
     private long commentId;
-    private long userId;
-    private long planId;
+    private Long userId;
+    private Long planId;
     private long parentId;
     private int refOrder;
     private String time;

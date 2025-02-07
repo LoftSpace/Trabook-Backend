@@ -18,9 +18,12 @@ public class PlanCommentController {
 
     @ResponseBody
     @PostMapping("/add")
-    public ResponseEntity<CommentUpdateResponseDTO> addComment(@RequestBody CommentRequestDTO comment, @RequestHeader("userId") long userId) {
+    public ResponseEntity<?> addComment(@RequestBody CommentRequestDTO comment, @RequestHeader("userId") Long userId) {
+        if(userId == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("userId 없음");
+
         comment.setUserId(userId);
-        comment.setCommentId(0);
+        planService.addComment(comment);
         CommentUpdateResponseDTO commentUpdateResponseDTO = new CommentUpdateResponseDTO();
         try {
             commentUpdateResponseDTO.setCommentId(planService.addComment(comment));

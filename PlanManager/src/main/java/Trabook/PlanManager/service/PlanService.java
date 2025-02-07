@@ -179,9 +179,7 @@ public class PlanService {
         planRepository.findById(planId)
                  .orElseThrow(() -> new IllegalArgumentException(String.format("plan not found")));
         planRepository.increaseCommentCount(planId);
-        long commentId = planRepository.addComment(comment);
-        return commentId;
-
+        return planRepository.addComment(comment);
     }
 
     @Transactional
