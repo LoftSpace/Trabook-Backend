@@ -18,6 +18,7 @@ import Trabook.PlanManager.service.webclient.WebClientService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.geo.Point;
@@ -284,12 +285,14 @@ public class PlanService {
         return new ArrayList<>(tags);
     }
     @Transactional
-    public String deletePlan(long planId) {
-        if(planRepository.deletePlan(planId) == 1)
-            return "delete complete";
-        else {
-            return "error";
-        }
+    public void deletePlan(long planId,Long userId) {
+        Plan plan = planRepository.findById(planId)
+                .orElseThrow(() -> new EntityNotFoundException("계획 없음"));
+        if(plan.getUserId() != userId)
+            throw new IllegalArgumentException("접근 권한 없음");
+        if(planRepository.deletePlan(planId) == 0)
+            throw new EntityNotFoundException("이미 삭제된 계획");
+
     }
 
     @Transactional

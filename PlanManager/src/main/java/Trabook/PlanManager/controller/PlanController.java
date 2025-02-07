@@ -13,6 +13,7 @@ import Trabook.PlanManager.service.PlanService;
 import Trabook.PlanManager.service.file.FileUploadService;
 import Trabook.PlanManager.service.webclient.WebClientService;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -124,13 +125,19 @@ public class PlanController {
 
     @ResponseBody
     @DeleteMapping("")
-    public ResponseEntity<ResponseMessage> deletePlan(@RequestParam("planId") long planId,@RequestHeader("userId") long userId) {
-        PlanResponseDTO plan = planService.getTotalPlan(planId, userId);
-        if(plan.getPlan().getUserId() != userId)
-            return new ResponseEntity<>(new ResponseMessage("you have no access to this plan"),HttpStatus.BAD_REQUEST);
-        //계획과 유저 일치하는 로직 추가
-        String message = planService.deletePlan(planId);
-        return ResponseEntity.ok(new ResponseMessage(message));
+    public ResponseEntity<?> deletePlan(@RequestParam("planId") long planId,@RequestHeader("userId") Long userId) {
+        if(userId == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인 필요");
+
+        try {
+            planService.deletePlan(planId,userId);
+            return ResponseEntity.ok("계획 삭제 성공");
+        } catch (EntityNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
     }
 
     @ResponseBody
