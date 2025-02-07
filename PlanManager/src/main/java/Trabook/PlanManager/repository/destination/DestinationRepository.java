@@ -30,6 +30,7 @@ public interface DestinationRepository {
     int deletePlaceLike(long userId, long placeId);
     int deletePlaceScrap(long userId, long placeId);
     int likeDown(long placeId);
+    int scrapUp(long placeId);
     int scrapDown(long placeId);
     int scoreUp(long placeId);
     boolean isScrapped(long placeId, long userId);

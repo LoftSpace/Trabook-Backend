@@ -5,7 +5,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 @Setter @Getter
-public class PlanCreateDTO {
+public class PlanCreateDto {
     private long userId;
     private String state;
     private LocalDate startDate;
@@ -13,7 +13,7 @@ public class PlanCreateDTO {
 
 
 
-    public PlanCreateDTO(long userId, String state, LocalDate startDate, LocalDate endDate) {
+    public PlanCreateDto(long userId, String state, LocalDate startDate, LocalDate endDate) {
         this.userId = userId;
         this.state = state;
         this.startDate = startDate;

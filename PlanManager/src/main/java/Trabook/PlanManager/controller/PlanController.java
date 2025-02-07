@@ -4,8 +4,8 @@ import Trabook.PlanManager.domain.comment.Comment;
 import Trabook.PlanManager.domain.plan.*;
 import Trabook.PlanManager.domain.user.User;
 
-import Trabook.PlanManager.dto.PlanCreateDTO;
-import Trabook.PlanManager.dto.PlanCreateResponseDTO;
+import Trabook.PlanManager.dto.PlanCreateDto;
+import Trabook.PlanManager.dto.PlanCreateResponseDto;
 import Trabook.PlanManager.dto.PlanIdDTO;
 import Trabook.PlanManager.response.*;
 
@@ -49,12 +49,12 @@ public class PlanController {
 
     @ResponseBody
     @PostMapping("/create")
-    public ResponseEntity<PlanCreateResponseDTO> createPlan(@RequestBody PlanCreateDTO planCreateDTO, @RequestHeader("userId") long userId) throws FileNotFoundException {
+    public ResponseEntity<PlanCreateResponseDto> createPlan(@RequestBody PlanCreateDto planCreateDTO, @RequestHeader("userId") long userId) throws FileNotFoundException {
         //System.out.println(userId);
         planCreateDTO.setUserId(userId);
         Long planId = planService.createPlan(planCreateDTO);
         String fileName = fileUploadService.uploadDefaultImage(planId);
-        PlanCreateResponseDTO planCreateResponseDTO = new PlanCreateResponseDTO(planId,"create complete","https://storage.googleapis.com/trabook-20240822/"+fileName);
+        PlanCreateResponseDto planCreateResponseDTO = new PlanCreateResponseDto(planId,"create complete","https://storage.googleapis.com/trabook-20240822/"+fileName);
         return new ResponseEntity<>(planCreateResponseDTO, HttpStatus.OK);
 
     }

@@ -1,7 +1,7 @@
 package Trabook.PlanManager.repository.plan;
 
 import Trabook.PlanManager.domain.plan.PlanComment;
-import Trabook.PlanManager.dto.PlanGeneralDTO;
+import Trabook.PlanManager.dto.PlanGeneralDto;
 import Trabook.PlanManager.response.PlanListResponseDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -47,7 +47,7 @@ public class JdbcTemplatePlanListRepository implements PlanListRepository{
     }
 
     @Override
-    public List<PlanGeneralDTO> findCustomPlanList(String search,
+    public List<PlanGeneralDto> findCustomPlanList(String search,
                                                    List<String> state,
                                                    Integer numOfPeople,
                                                    Integer duration,
@@ -110,10 +110,10 @@ public class JdbcTemplatePlanListRepository implements PlanListRepository{
     }
 
 
-    private RowMapper<PlanGeneralDTO> generalPlanListRowMapper() {
-        return new RowMapper<PlanGeneralDTO>() {
+    private RowMapper<PlanGeneralDto> generalPlanListRowMapper() {
+        return new RowMapper<PlanGeneralDto>() {
             @Override
-            public PlanGeneralDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+            public PlanGeneralDto mapRow(ResultSet rs, int rowNum) throws SQLException {
                 PlanListResponseDTO plan = new PlanListResponseDTO();
                 plan.setPlanTitle(rs.getString("title"));
                 plan.setPlanId(rs.getLong("planId"));
@@ -160,7 +160,7 @@ public class JdbcTemplatePlanListRepository implements PlanListRepository{
                     }
                 } while (rs.next() && rs.getLong("planId") == plan.getPlanId());
 
-                return new PlanGeneralDTO(plan, comments);
+                return new PlanGeneralDto(plan, comments);
             }
         };
     }

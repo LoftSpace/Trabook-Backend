@@ -35,6 +35,7 @@ public class DestinationService {
         destinationRepository.findByPlaceId(placeId)
                 .orElseThrow(() -> new EntityNotFoundException("여행지 없음"));
         destinationRepository.addPlaceScrap(userId, placeId);
+        destinationRepository.scrapUp(placeId);
     }
 
     @Transactional
@@ -42,9 +43,8 @@ public class DestinationService {
         destinationRepository.findByPlaceId(placeId)
                 .orElseThrow(() -> new EntityNotFoundException("여행지 없음"));
 
-        if(destinationRepository.deletePlaceScrap(userId,placeId)==1) {
+        if(destinationRepository.deletePlaceScrap(userId,placeId)==1)
             destinationRepository.scrapDown(placeId);
-        }
         else
             throw new EntityNotFoundException("스크랩 없음");
     }

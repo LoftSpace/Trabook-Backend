@@ -1,9 +1,9 @@
 package Trabook.PlanManager.repository.plan;
 
 import Trabook.PlanManager.domain.comment.Comment;
-import Trabook.PlanManager.dto.CommentRequestDTO;
+import Trabook.PlanManager.dto.CommentRequestDto;
 import Trabook.PlanManager.domain.plan.*;
-import Trabook.PlanManager.dto.PlanCreateDTO;
+import Trabook.PlanManager.dto.PlanCreateDto;
 import Trabook.PlanManager.response.PlanListResponseDTO;
 import Trabook.PlanManager.response.PlanResponseDTO;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface PlanRepository {
 
-    long createPlan(PlanCreateDTO planCreateDTO);
+    long createPlan(PlanCreateDto planCreateDTO);
 
     long updatePlan(Plan plan);
     long saveDayPlan(DayPlan dayPlan);
@@ -34,7 +34,7 @@ public interface PlanRepository {
     List<String> findTagsByPlanId(long planId);
     void likePlan(long userId, long planId);
     void scrapPlan(long userId,long planId);
-    long addComment(CommentRequestDTO comment);
+    long addComment(CommentRequestDto comment);
     void deleteDayPlanById(long planId, long day);
     void deleteScheduleById(long planId, long day);
     void updateLikes(long planId, int numOfLikes);

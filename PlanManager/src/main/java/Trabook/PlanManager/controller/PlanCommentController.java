@@ -1,9 +1,7 @@
 package Trabook.PlanManager.controller;
 
-import Trabook.PlanManager.domain.comment.Comment;
-import Trabook.PlanManager.dto.CommentRequestDTO;
+import Trabook.PlanManager.dto.CommentRequestDto;
 import Trabook.PlanManager.response.CommentUpdateResponseDTO;
-import Trabook.PlanManager.response.ResponseMessage;
 import Trabook.PlanManager.service.PlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +16,7 @@ public class PlanCommentController {
 
     @ResponseBody
     @PostMapping("/add")
-    public ResponseEntity<?> addComment(@RequestBody CommentRequestDTO comment, @RequestHeader("userId") Long userId) {
+    public ResponseEntity<?> addComment(@RequestBody CommentRequestDto comment, @RequestHeader("userId") Long userId) {
         if(userId == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("userId 없음");
 

@@ -1,9 +1,9 @@
 package Trabook.PlanManager.repository.plan;
 
 import Trabook.PlanManager.domain.comment.Comment;
-import Trabook.PlanManager.dto.CommentRequestDTO;
+import Trabook.PlanManager.dto.CommentRequestDto;
 import Trabook.PlanManager.domain.plan.Plan;
-import Trabook.PlanManager.dto.PlanCreateDTO;
+import Trabook.PlanManager.dto.PlanCreateDto;
 import Trabook.PlanManager.domain.user.User;
 import Trabook.PlanManager.response.PlanListResponseDTO;
 import Trabook.PlanManager.domain.plan.DayPlan;
@@ -30,7 +30,7 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
 
 
     @Override
-    public long createPlan(PlanCreateDTO planCreateDTO) {
+    public long createPlan(PlanCreateDto planCreateDTO) {
         String sql = "INSERT INTO Plan(userId,state,startDate,endDate)" +
                 "VALUES(?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -377,7 +377,7 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
     }
 
     @Override
-    public long addComment(CommentRequestDTO comment) {
+    public long addComment(CommentRequestDto comment) {
         String sql = "INSERT INTO PlanComment( userId,planId,content,parentId,refOrder,time)" +
                 "values(?,?,?,?,?,?)";
 

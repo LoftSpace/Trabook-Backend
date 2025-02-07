@@ -104,9 +104,6 @@ public class    DestinationJdbcTemplateRepository implements DestinationReposito
         String sql = "INSERT INTO ScrappedPlace(userId,placeId)" +
                 "values(?, ?)";
         jdbcTemplate.update(sql,userId,placeId);
-        String sql2 = "UPDATE Place SET scraps = scraps + 1 WHERE placeId = ?";
-
-        jdbcTemplate.update(sql2, placeId);
     }
 
     @Override
@@ -125,6 +122,12 @@ public class    DestinationJdbcTemplateRepository implements DestinationReposito
     public int likeDown(long placeId) {
         String sql = "UPDATE Place SET likes = likes - 1 WHERE placeId = ?";
         return jdbcTemplate.update(sql,placeId);
+    }
+
+    @Override
+    public int scrapUp(long placeId) {
+        String sql2 = "UPDATE Place SET scraps = scraps + 1 WHERE placeId = ?";
+        return jdbcTemplate.update(sql2, placeId);
     }
 
     @Override

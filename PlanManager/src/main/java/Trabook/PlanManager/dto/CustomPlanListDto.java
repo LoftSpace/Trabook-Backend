@@ -2,11 +2,11 @@ package Trabook.PlanManager.dto;
 
 import java.util.List;
 
-public class CustomPlanListDTO {
-    public List<PlanGeneralDTO> plans;
+public class CustomPlanListDto {
+    public List<PlanGeneralDto> plans;
     public Integer totalPages;
 
-    public CustomPlanListDTO(List<PlanGeneralDTO> plans, Integer totalPages) {
+    public CustomPlanListDto(List<PlanGeneralDto> plans, Integer totalPages) {
         this.plans = plans;
         this.totalPages = totalPages;
     }

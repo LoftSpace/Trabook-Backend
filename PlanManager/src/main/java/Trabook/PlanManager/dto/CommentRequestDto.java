@@ -4,7 +4,7 @@ import lombok.*;
 
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CommentRequestDTO {
+public class CommentRequestDto {
     private long commentId;
     private Long userId;
     private Long planId;

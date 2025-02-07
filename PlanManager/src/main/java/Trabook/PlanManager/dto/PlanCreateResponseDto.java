@@ -6,12 +6,12 @@ import lombok.Setter;
 
 @RequiredArgsConstructor
 @Getter @Setter
-public class PlanCreateResponseDTO {
+public class PlanCreateResponseDto {
     private long planId;
     private String message;
     private String imgSrc;
 
-    public PlanCreateResponseDTO(Long planId, String meesage, String fileName) {
+    public PlanCreateResponseDto(Long planId, String meesage, String fileName) {
         this.planId = planId;
         this.message = meesage;
         this.imgSrc = fileName;

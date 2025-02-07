@@ -1,11 +1,11 @@
 package Trabook.PlanManager.service;
 
 import Trabook.PlanManager.domain.comment.Comment;
-import Trabook.PlanManager.dto.CommentRequestDTO;
+import Trabook.PlanManager.dto.CommentRequestDto;
 import Trabook.PlanManager.domain.destination.Place;
 import Trabook.PlanManager.domain.plan.*;
-import Trabook.PlanManager.dto.PlanCreateDTO;
-import Trabook.PlanManager.dto.PlanGeneralDTO;
+import Trabook.PlanManager.dto.PlanCreateDto;
+import Trabook.PlanManager.dto.PlanGeneralDto;
 import Trabook.PlanManager.repository.destination.DestinationRepository;
 import Trabook.PlanManager.repository.plan.PlanListRepository;
 import Trabook.PlanManager.repository.plan.PlanRepository;
@@ -37,7 +37,7 @@ public class PlanService {
     private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
-    public long createPlan(PlanCreateDTO planCreateDTO) {
+    public long createPlan(PlanCreateDto planCreateDTO) {
         return planRepository.createPlan(planCreateDTO);
     }
 
@@ -174,7 +174,7 @@ public class PlanService {
     }
 
     @Transactional
-    public long addComment(CommentRequestDTO comment) {
+    public long addComment(CommentRequestDto comment) {
         long planId = comment.getPlanId();
         planRepository.findById(planId)
                  .orElseThrow(() -> new IllegalArgumentException(String.format("Plan 찾을 수 없음")));
@@ -316,7 +316,7 @@ public class PlanService {
     }
 
     @Transactional
-    public List<PlanGeneralDTO> findCustomPlanList(String search,
+    public List<PlanGeneralDto> findCustomPlanList(String search,
                                                    List<String> state,
                                                    Integer numOfPeople,
                                                    Integer duration,

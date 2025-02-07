@@ -8,12 +8,12 @@ import lombok.Setter;
 import java.util.List;
 
 @Getter @Setter
-public class PlanGeneralDTO {
+public class PlanGeneralDto {
     private PlanListResponseDTO plan;
     private List<PlanComment> comments;
-    public PlanGeneralDTO() {}
+    public PlanGeneralDto() {}
 
-    public PlanGeneralDTO(PlanListResponseDTO plan, List<PlanComment> comments) {
+    public PlanGeneralDto(PlanListResponseDTO plan, List<PlanComment> comments) {
         this.plan = plan;
         this.comments = comments;
     }
