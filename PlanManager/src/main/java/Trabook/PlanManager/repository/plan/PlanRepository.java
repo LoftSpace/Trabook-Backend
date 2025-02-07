@@ -34,7 +34,7 @@ public interface PlanRepository {
     List<String> findTagsByPlanId(long planId);
     void likePlan(long userId, long planId);
     void scrapPlan(long userId,long planId);
-    long addComment(CommentRequestDto comment);
+    long addComment(Comment comment);
     void deleteDayPlanById(long planId, long day);
     void deleteScheduleById(long planId, long day);
     void updateLikes(long planId, int numOfLikes);

@@ -172,9 +172,14 @@ public class PlanService {
             planRepository.saveDayPlan(dayPlan);
         }
     }
+    //TODO:요청 dto 처리 서비스레이어 추후에 추가
+    public long handleAddComment(CommentRequestDto commentRequestDto){
+        Comment comment = commentRequestDto.toEntity();
+        return addComment(comment);
+    }
 
     @Transactional
-    public long addComment(CommentRequestDto comment) {
+    public long addComment(Comment comment) {
         long planId = comment.getPlanId();
         planRepository.findById(planId)
                  .orElseThrow(() -> new IllegalArgumentException(String.format("Plan 찾을 수 없음")));

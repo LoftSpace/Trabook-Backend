@@ -377,7 +377,7 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
     }
 
     @Override
-    public long addComment(CommentRequestDto comment) {
+    public long addComment(Comment comment) {
         String sql = "INSERT INTO PlanComment( userId,planId,content,parentId,refOrder,time)" +
                 "values(?,?,?,?,?,?)";
 
@@ -474,24 +474,7 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
             }
         };
     }
-/*
-    private RowMapper<DayPlan.Schedule> scheduleRowMapperForTotalPlan() {
-        return new RowMapper<DayPlan.Schedule>() {
-            @Override
-            public DayPlan.Schedule mapRow(ResultSet rs, int rowNum) throws SQLException {
-                DayPlan.Schedule schedule = new DayPlan.Schedule();
-                schedule.setLongitude(rs.getDouble("x"));
-                schedule.setLatitude(rs.getDouble("y"));
-                schedule.setImageSrc(rs.getString("imageSrc"));
-                schedule.setSubcategory(rs.getString("subcategory"));
-                schedule.setPlaceName(rs.getString("placeName"));
-                schedule.setAddress(rs.getString("address"));
-                return schedule;
-            }
-        };
-    }
 
- */
     private  RowMapper<DayPlan.Schedule> scheduleRowMapper() {
         return new RowMapper<DayPlan.Schedule>() {
             @Override
@@ -519,65 +502,16 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
             @Override
             public Comment mapRow(ResultSet rs, int rowNum) throws SQLException {
                 Comment comment = new Comment();
-                comment.setUser(new User());
+                comment.setUserId(rs.getLong("userId"));
                 comment.setCommentId(rs.getLong("commentId"));
                 comment.setParentId(rs.getLong("parentId"));
                 comment.setContent(rs.getString("content"));
                 comment.setPlanId(rs.getLong("planId"));
                 comment.setTime(rs.getString("time"));
                 comment.setRefOrder(rs.getInt("refOrder"));
-                comment.getUser().setUserId(rs.getLong("userId"));
                 return comment;
             }
         };
     }
-/*
-    private RowMapper<PlanResponseDTO> planTestRowMapper() {
-        return new RowMapper<PlanResponseDTO>() {
-            @Override
-            public PlanResponseDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
-                PlanResponseDTO planResponseDTO = new PlanResponseDTO();
-                Plan plan = new Plan();
-                plan.setTitle(rs.getString("title"));
-                plan.setUserId(rs.getLong("userId"));
-                plan.setPlanId(rs.getLong("planId"));
-                plan.setLikes(rs.getInt("likes"));
-                plan.setScraps(rs.getInt("scraps"));
-                plan.setPublic(rs.getBoolean("isPublic"));
-                plan.setState(rs.getString("state"));
-                plan.setImgSrc(rs.getString("imgSrc"));
-                plan.setBudget(rs.getInt("budget"));
-                plan.setNumOfPeople(rs.getInt("numOfPeople"));
-                plan.setDescription(rs.getString("description"));
-                Date startDate = rs.getDate("startDate");
 
-                if (startDate != null) {
-                    plan.setStartDate(startDate.toLocalDate());
-                } else {
-                    plan.setStartDate(null); // 또는 기본값 설정
-                }
-
-                Date endDate = rs.getDate("endDate");
-                if (endDate != null) {
-                    plan.setEndDate(endDate.toLocalDate());
-                } else {
-                    plan.setEndDate(null); // 또는 기본
-                }
-
-                plan.setDayPlanList(new ArrayList<>());
-                DayPlan dayPlan = new DayPlan();
-                dayPlan.setDay(rs.getInt("day"));
-                dayPlan.setPlanId(rs.getLong("planId"));
-                dayPlan.setStartTime(rs.getTime("startTime").toLocalTime());
-                dayPlan.setEndTime(rs.getTime("endTime").toLocalTime());
-
-                plan.get
-
-
-            }
-        };
-    }
-
-
- */
 }

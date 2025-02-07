@@ -1,5 +1,6 @@
 package Trabook.PlanManager.service.comment;
 
+import Trabook.PlanManager.domain.comment.Comment;
 import Trabook.PlanManager.dto.CommentRequestDto;
 import Trabook.PlanManager.domain.plan.Plan;
 import Trabook.PlanManager.repository.plan.PlanRepository;
@@ -41,7 +42,7 @@ public class CommentServiceParallelTest {
             int commentNumber = i + 1;
             executorService.submit(() ->  {
                 try {
-                    planService.addComment(new CommentRequestDto(0,3,580,0,0,"0","2024-10-13T16:18:35.911Z"));
+                    planService.addComment(new Comment(0L,3L,580L,"l",0,0,"2024-10-13T16:18:35.911Z"));
                 } catch( Exception e){
                     System.out.println(e);
                 } finally {

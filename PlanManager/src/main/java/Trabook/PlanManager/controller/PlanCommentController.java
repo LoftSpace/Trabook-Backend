@@ -1,5 +1,6 @@
 package Trabook.PlanManager.controller;
 
+import Trabook.PlanManager.domain.comment.Comment;
 import Trabook.PlanManager.dto.CommentRequestDto;
 import Trabook.PlanManager.response.CommentUpdateResponseDTO;
 import Trabook.PlanManager.service.PlanService;
@@ -16,19 +17,17 @@ public class PlanCommentController {
 
     @ResponseBody
     @PostMapping("/add")
-    public ResponseEntity<?> addComment(@RequestBody CommentRequestDto comment, @RequestHeader("userId") Long userId) {
+    public ResponseEntity<?> addComment(@RequestBody CommentRequestDto commentRequestDto, @RequestHeader("userId") Long userId) {
         if(userId == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("userId 없음");
 
         try {
-            comment.setUserId(userId);
-            long providedCommentId = planService.addComment(comment);
+            long providedCommentId = planService.handleAddComment(commentRequestDto);
             return ResponseEntity.ok(
                     CommentUpdateResponseDTO.builder()
                             .commentId(providedCommentId)
                             .message("댓글 작성 성공")
                             .build());
-
         } catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(e.getMessage());
