@@ -272,19 +272,14 @@ public class PlanService {
     }
 
     @Transactional
-    public String deleteComment(long commentId) {
-
-        Comment comment = planRepository.findCommentById(commentId).get();
-        planRepository.findCommentById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException(String.format("comment already deleted")));
-
+    public void deleteComment(long commentId) {
+        Comment comment = planRepository.findCommentById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException(String.format("댓글 찾을 수 없음")));
         // 대댓글인지 확인
         if(comment.getRefOrder()==0) {
             planRepository.deleteCommentByRef(comment.getParentId(),commentId, comment.getPlanId());
-            return "delete complete";
         } else {
             planRepository.deleteComment(commentId);
-            return "delete complete";
         }
 
     }

@@ -39,18 +39,12 @@ public class PlanCommentController {
 
     @ResponseBody
     @DeleteMapping("")
-    public ResponseEntity<ResponseMessage> deleteComment(@RequestParam("commentId") Long commentId, @RequestHeader("userId") Long userId) {
-        Comment comment = new Comment();
-        try{
-            comment = planService.getComment(commentId);
+    public ResponseEntity<?> deleteComment(@RequestParam("commentId") Long commentId, @RequestHeader("userId") Long userId) {
+        try {
+            planService.deleteComment(commentId);
+            return ResponseEntity.ok("댓글 삭제 성공");
         } catch(IllegalArgumentException e){
-            return new ResponseEntity<>(new ResponseMessage("comment not found"),HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
-
-        if(comment.getUser().getUserId() != userId)
-            return new ResponseEntity<>(new ResponseMessage("you have no access to this comment"),HttpStatus.BAD_REQUEST);
-        //유저아이디랑 댓글 아이디 일치여부 로직 추가
-        String message = planService.deleteComment(commentId);
-        return ResponseEntity.ok(new ResponseMessage(message));
     }
 }
