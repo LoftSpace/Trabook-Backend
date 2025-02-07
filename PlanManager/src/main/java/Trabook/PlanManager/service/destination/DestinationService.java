@@ -5,6 +5,8 @@ import Trabook.PlanManager.dto.DestinationDto.GetPlaceResponseDto;
 import Trabook.PlanManager.dto.DestinationDto.PlaceForModalDTO;
 import Trabook.PlanManager.repository.destination.DestinationRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,15 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class DestinationService {
 
     private final DestinationRepository destinationRepository;
-
-
-
-    public DestinationService(DestinationRepository destinationRepository) {
-        this.destinationRepository = destinationRepository;
-    }
 
     public List<Place> getPlaceListByCity(long cityId) {
         return destinationRepository.findPlaceListByCity(cityId);
@@ -42,7 +39,6 @@ public class DestinationService {
     public void deletePlaceScrap(long userId, long placeId)  throws RuntimeException{
         destinationRepository.findByPlaceId(placeId)
                 .orElseThrow(() -> new EntityNotFoundException("여행지 없음"));
-
         if(destinationRepository.deletePlaceScrap(userId,placeId)==1)
             destinationRepository.scrapDown(placeId);
         else
