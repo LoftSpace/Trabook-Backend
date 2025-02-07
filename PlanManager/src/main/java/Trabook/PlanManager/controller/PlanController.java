@@ -50,7 +50,6 @@ public class PlanController {
     @ResponseBody
     @PostMapping("/create")
     public ResponseEntity<PlanCreateResponseDto> createPlan(@RequestBody PlanCreateDto planCreateDTO, @RequestHeader("userId") long userId) throws FileNotFoundException {
-        //System.out.println(userId);
         planCreateDTO.setUserId(userId);
         Long planId = planService.createPlan(planCreateDTO);
         String fileName = fileUploadService.uploadDefaultImage(planId);
@@ -95,13 +94,6 @@ public class PlanController {
 
 
     @ResponseBody
-    @PostMapping("/test")
-    public ResponseEntity<ResponseMessage> scrap(@RequestParam("planId") long planId) {
-        planService.deleteLike(3,planId);
-        return ResponseEntity.ok(new ResponseMessage("OK"));
-    }
-
-    @ResponseBody
     @PostMapping("/like")
     public ResponseEntity<ResponseMessage> likePlan(@RequestBody PlanIdDTO planIdDTO, @RequestHeader("userId") long userId) {
 
@@ -113,7 +105,6 @@ public class PlanController {
         return ResponseEntity.ok(new ResponseMessage(message));
 
     }
-
 
 
     @ResponseBody
@@ -131,12 +122,10 @@ public class PlanController {
     }
 
 
-
     @ResponseBody
     @DeleteMapping("")
     public ResponseEntity<ResponseMessage> deletePlan(@RequestParam("planId") long planId,@RequestHeader("userId") long userId) {
         PlanResponseDTO plan = planService.getTotalPlan(planId, userId);
-        System.out.println(plan.getPlan().getUserId());
         if(plan.getPlan().getUserId() != userId)
             return new ResponseEntity<>(new ResponseMessage("you have no access to this plan"),HttpStatus.BAD_REQUEST);
         //계획과 유저 일치하는 로직 추가
