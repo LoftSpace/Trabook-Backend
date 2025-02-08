@@ -46,7 +46,7 @@ public class FileUploadService {
     public String uploadDefaultImage(Long planId) throws FileNotFoundException {
         ClassLoader classLoader = getClass().getClassLoader();
         String fileName = "planPhoto/"+Long.toString(planId);
-
+        String defaultFilePath = "https://storage.googleapis.com/trabook-20240822/";
         try(InputStream inputStream = classLoader.getResourceAsStream("planPhoto-thumbnail.png")){
             if(inputStream == null){
                 throw new IOException("File not found in resources: planPhoto-thumbnail.png");
@@ -58,6 +58,6 @@ public class FileUploadService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return fileName;
+        return defaultFilePath + fileName;
     }
 }

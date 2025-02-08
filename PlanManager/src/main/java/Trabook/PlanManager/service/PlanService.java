@@ -14,6 +14,7 @@ import Trabook.PlanManager.repository.plan.PlanRepository;
 import Trabook.PlanManager.response.PlanListResponseDTO;
 import Trabook.PlanManager.response.PlanResponseDTO;
 import Trabook.PlanManager.service.destination.PointDeserializer;
+import Trabook.PlanManager.service.file.FileUploadService;
 import Trabook.PlanManager.service.webclient.WebClientService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -28,6 +29,7 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileNotFoundException;
 import java.util.*;
 
 @Slf4j
@@ -40,10 +42,12 @@ public class PlanService {
     private final PlanListRepository planListRepository;
     private final RedisTemplate<String, String> redisTemplate;
     private final WebClientService webClientService;
+    private final FileUploadService fileUploadService;
     @Transactional
-    public long createPlan(PlanCreateRequestDto planCreateRequestDTO,Long userId) {
+    public String createPlan(PlanCreateRequestDto planCreateRequestDTO,Long userId) throws FileNotFoundException {
         PlanBasicInfo planBasicInfo = planCreateRequestDTO.toEntity();
-        return planRepository.createPlan(planBasicInfo);
+        long createdPlanId = planRepository.createPlan(planBasicInfo);
+        return fileUploadService.uploadDefaultImage(createdPlanId);
     }
 
     @Transactional

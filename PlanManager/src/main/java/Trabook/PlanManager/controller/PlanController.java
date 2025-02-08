@@ -39,11 +39,13 @@ public class PlanController {
 
     @ResponseBody
     @PostMapping("/create")
-    public ResponseEntity<PlanCreateResponseDto> createPlan(@RequestBody PlanCreateRequestDto planCreateRequestDTO, @RequestHeader("userId") Long userId) throws FileNotFoundException {
-        Long planId = planService.createPlan(planCreateRequestDTO,userId);
-        String fileName = fileUploadService.uploadDefaultImage(planId);
-        PlanCreateResponseDto planCreateResponseDTO = new PlanCreateResponseDto(planId,"create complete","https://storage.googleapis.com/trabook-20240822/"+fileName);
-        return new ResponseEntity<>(planCreateResponseDTO, HttpStatus.OK);
+    public ResponseEntity<?> createPlan(@RequestBody PlanCreateRequestDto planCreateRequestDTO, @RequestHeader("userId") Long userId) throws FileNotFoundException {
+        try{
+            String imagePath = planService.createPlan(planCreateRequestDTO,userId);
+            return ResponseEntity.ok(imagePath);
+        } catch(FileNotFoundException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
 
     }
 
