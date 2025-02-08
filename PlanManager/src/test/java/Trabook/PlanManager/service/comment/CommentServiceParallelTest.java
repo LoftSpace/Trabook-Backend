@@ -1,8 +1,7 @@
 package Trabook.PlanManager.service.comment;
 
 import Trabook.PlanManager.domain.comment.Comment;
-import Trabook.PlanManager.dto.CommentRequestDto;
-import Trabook.PlanManager.domain.plan.Plan;
+import Trabook.PlanManager.domain.plan.TotalPlan;
 import Trabook.PlanManager.repository.plan.PlanRepository;
 import Trabook.PlanManager.service.PlanService;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +17,7 @@ import java.util.concurrent.Executors;
 @SpringBootTest
 public class CommentServiceParallelTest {
     private static final int TOTAL_COUNT = 3;
-    private Plan plan;
+    private TotalPlan totalPlan;
     private ExecutorService executorService;
     private CountDownLatch latch;
 
@@ -32,7 +31,7 @@ public class CommentServiceParallelTest {
     void setUp() {
         executorService = Executors.newFixedThreadPool(TOTAL_COUNT);
         latch = new CountDownLatch(TOTAL_COUNT);
-         plan =  planRepository.findById(580).get();
+         totalPlan =  planRepository.findById(580).get();
 
     }
 

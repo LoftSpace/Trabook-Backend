@@ -6,7 +6,7 @@ import Trabook.PlanManager.dto.CommentRequestDto;
 import Trabook.PlanManager.domain.destination.Place;
 import Trabook.PlanManager.domain.plan.*;
 import Trabook.PlanManager.dto.CommentWithUser;
-import Trabook.PlanManager.dto.PlanCreateDto;
+import Trabook.PlanManager.dto.PlanCreateRequestDto;
 import Trabook.PlanManager.dto.PlanGeneralDto;
 import Trabook.PlanManager.repository.destination.DestinationRepository;
 import Trabook.PlanManager.repository.plan.PlanListRepository;
@@ -41,13 +41,14 @@ public class PlanService {
     private final RedisTemplate<String, String> redisTemplate;
     private final WebClientService webClientService;
     @Transactional
-    public long createPlan(PlanCreateDto planCreateDTO) {
-        return planRepository.createPlan(planCreateDTO);
+    public long createPlan(PlanCreateRequestDto planCreateRequestDTO,Long userId) {
+        PlanBasicInfo planBasicInfo = planCreateRequestDTO.toEntity();
+        return planRepository.createPlan(planBasicInfo);
     }
 
     @Transactional
-    public long updatePlan(Plan plan) {
-        long planId = plan.getPlanId();
+    public long updatePlan(TotalPlan totalPlan) {
+        long planId = totalPlan.getPlanId();
 
         if(planRepository.findById(planId).isEmpty()) {
             return 0;
@@ -56,23 +57,23 @@ public class PlanService {
         if(isPlanExistInRanking(planId)) {
             System.out.println("plan exists in ranking");
             //write through
-            modifyPlanInRanking(plan);
+            modifyPlanInRanking(totalPlan);
         }
 
-        planId = updatePlanToDB(plan);
+        planId = updatePlanToDB(totalPlan);
         return planId;
     }
 
-    private long updatePlanToDB(Plan plan) {
+    private long updatePlanToDB(TotalPlan totalPlan) {
         long planId;
-        plan.setImgSrc("https://storage.googleapis.com/trabook-20240822/planPhoto/" + Long.toString(plan.getPlanId()));
+        totalPlan.setImgSrc("https://storage.googleapis.com/trabook-20240822/planPhoto/" + Long.toString(totalPlan.getPlanId()));
 
 
-        List<DayPlan> dayPlanList = plan.getDayPlanList();
-        planId = planRepository.updatePlan(plan);
+        List<DayPlan> dayPlanList = totalPlan.getDayPlanList();
+        planId = planRepository.updatePlan(totalPlan);
 
         List<DayPlan> oldDayPlanList = planRepository.findDayPlanListByPlanId(planId);
-        int updatePlanDays = plan.getDayPlanList().size();
+        int updatePlanDays = totalPlan.getDayPlanList().size();
         int oldPlanDays = oldDayPlanList.size();
 
         if (updatePlanDays < oldPlanDays) {
@@ -89,7 +90,7 @@ public class PlanService {
             for (DayPlan dayPlan : dayPlanList) {
                 dayPlan.setPlanId(planId);
                 updateOrSaveDayPlan(dayPlan);
-                updateOrSaveSchedule(plan, dayPlan);
+                updateOrSaveSchedule(totalPlan, dayPlan);
             }
         }
         return planId;
@@ -107,12 +108,12 @@ public class PlanService {
         return false;
     }
 
-    private void modifyPlanInRanking(Plan plan)  {
+    private void modifyPlanInRanking(TotalPlan totalPlan)  {
         HashOperations<String,String,String> hashops = redisTemplate.opsForHash();
         objectMapper.registerModule(new JavaTimeModule());
         try {
-            String planString = objectMapper.writeValueAsString(plan);
-            String planKey = "plan:content:" + plan.getPlanId();
+            String planString = objectMapper.writeValueAsString(totalPlan);
+            String planKey = "plan:content:" + totalPlan.getPlanId();
             hashops.put("plans", planKey, planString);
         } catch (Exception e) {
             e.printStackTrace();
@@ -140,9 +141,9 @@ public class PlanService {
     }
 
 
-    private void updateOrSaveSchedule(Plan plan, DayPlan dayPlan) {
+    private void updateOrSaveSchedule(TotalPlan totalPlan, DayPlan dayPlan) {
         int day = dayPlan.getDay();
-        long planId = plan.getPlanId();
+        long planId = totalPlan.getPlanId();
         for (DayPlan.Schedule schedule : dayPlan.getScheduleList()) {
             int order = schedule.getOrder();
             long placeId = schedule.getPlaceId();
@@ -157,12 +158,12 @@ public class PlanService {
             else // 기존에 있는 스케쥴 업데이트
                 planRepository.saveSchedule( schedule);
 
-            placeRatingScoreUp(plan, schedule);
+            placeRatingScoreUp(totalPlan, schedule);
         }
     }
 
-    private void placeRatingScoreUp(Plan plan, DayPlan.Schedule schedule) {
-        if (plan.isFinished()) // 점수 추가
+    private void placeRatingScoreUp(TotalPlan totalPlan, DayPlan.Schedule schedule) {
+        if (totalPlan.isFinished()) // 점수 추가
             destinationRepository.scoreUp(schedule.getPlaceId());
         // 레디스에 있는 목록인지 확인 로직 추가
     }
@@ -200,7 +201,7 @@ public class PlanService {
     }
     public PlanResponseDTO handleTotalPlanRequest(long planId,Long userId){
         PlanResponseDTO totalPlan = planRepository.findTotalPlan(planId);
-        Plan plan = totalPlan.getPlan();
+        TotalPlan plan = totalPlan.getTotalPlan();
         List<Place> placeList = destinationRepository.findPlaceListByPlanId(planId);
         // get vs set ???
         setPlanOwner(plan.getUserId(),totalPlan);
@@ -261,8 +262,8 @@ public class PlanService {
         totalPlan.setPlanOwner(planOwner);
     }
 
-    private void setDetailPlaceInfo(Plan plan,List<Place> placeList) {
-        List<DayPlan> dayPlanList = plan.getDayPlanList();
+    private void setDetailPlaceInfo(TotalPlan totalPlan, List<Place> placeList) {
+        List<DayPlan> dayPlanList = totalPlan.getDayPlanList();
         int placeIndex = 0;
         for(DayPlan dayPlan : dayPlanList) {
             for(DayPlan.Schedule schedule : dayPlan.getScheduleList()) {
@@ -286,9 +287,9 @@ public class PlanService {
     }
     @Transactional
     public void deletePlan(long planId,Long userId) {
-        Plan plan = planRepository.findById(planId)
+        TotalPlan totalPlan = planRepository.findById(planId)
                 .orElseThrow(() -> new EntityNotFoundException("계획 없음"));
-        if(plan.getUserId() != userId)
+        if(totalPlan.getUserId() != userId)
             throw new IllegalArgumentException("접근 권한 없음");
         if(planRepository.deletePlan(planId) == 0)
             throw new EntityNotFoundException("이미 삭제된 계획");
@@ -368,9 +369,9 @@ public class PlanService {
     }
 
     // null인지 아닌지 확인해서 boolean으로 반환하는 방식으로 바꾸기
-    public Optional<Plan> validateDuplicatePlanName(Plan plan){
+    public Optional<TotalPlan> validateDuplicatePlanName(TotalPlan totalPlan){
 
-        return planRepository.findPlanByUserAndName(plan.getUserId(),plan.getTitle());
+        return planRepository.findPlanByUserAndName(totalPlan.getUserId(), totalPlan.getTitle());
 
     }
 }

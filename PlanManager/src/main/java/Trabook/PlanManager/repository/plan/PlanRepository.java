@@ -1,9 +1,8 @@
 package Trabook.PlanManager.repository.plan;
 
 import Trabook.PlanManager.domain.comment.Comment;
-import Trabook.PlanManager.dto.CommentRequestDto;
 import Trabook.PlanManager.domain.plan.*;
-import Trabook.PlanManager.dto.PlanCreateDto;
+import Trabook.PlanManager.dto.PlanCreateRequestDto;
 import Trabook.PlanManager.response.PlanListResponseDTO;
 import Trabook.PlanManager.response.PlanResponseDTO;
 
@@ -13,15 +12,15 @@ import java.util.Optional;
 
 public interface PlanRepository {
 
-    long createPlan(PlanCreateDto planCreateDTO);
+    long createPlan(PlanBasicInfo planBasicInfo);
 
-    long updatePlan(Plan plan);
+    long updatePlan(TotalPlan totalPlan);
     long saveDayPlan(DayPlan dayPlan);
     long updateDayPlan(DayPlan dayPlan);
     void saveSchedule( DayPlan.Schedule schedule);
     long updateSchedule(DayPlan.Schedule schedule);
-    Optional<Plan> findById(long planId);
-    Optional<Plan> findPlanByUserAndName(long userId, String planName);
+    Optional<TotalPlan> findById(long planId);
+    Optional<TotalPlan> findPlanByUserAndName(long userId, String planName);
     Optional <DayPlan> findDayPlan(long planId,int day);
     Optional<Comment> findCommentById(long commentId);
     Optional <DayPlan.Schedule> findSchedule(long planId,int day,int order);

@@ -37,7 +37,6 @@ public class AdminController {
 
     //@Scheduled(cron = "0 * * * * *")
     //@Scheduled(cron = "0 0 0/1 * * *")
-
     @ResponseBody
     @GetMapping("/updateHottestPlan")
     public void updateHottestPlan()  {
@@ -47,7 +46,6 @@ public class AdminController {
         objectMapper.registerModule(new JavaTimeModule());
 
         for(PlanListResponseDTO plan : TopPlans){
-            //System.out.println("insert" + plan.getPlanTitle() + " and like is " + plan.getLikes());
             try {
                 String planString = objectMapper.writeValueAsString(plan);
                 String planKey = "plan:content:" + plan.getPlanId();
@@ -55,9 +53,6 @@ public class AdminController {
 
                 int likes = plan.getLikes();
                 Boolean topPlans = zsetOps.add("topPlans", planKey, likes);
-                System.out.println(topPlans);
-
-
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }

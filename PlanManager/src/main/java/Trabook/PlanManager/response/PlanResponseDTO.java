@@ -1,6 +1,6 @@
 package Trabook.PlanManager.response;
 
-import Trabook.PlanManager.domain.plan.Plan;
+import Trabook.PlanManager.domain.plan.TotalPlan;
 import Trabook.PlanManager.domain.user.User;
 import Trabook.PlanManager.dto.CommentWithUser;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlanResponseDTO {
-    private Plan plan;
+    private TotalPlan totalPlan;
     private User planOwner;
     private List<CommentWithUser> comments;
     private Boolean isLiked;

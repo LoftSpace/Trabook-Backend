@@ -3,13 +3,12 @@ package Trabook.PlanManager.domain.plan;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Getter @Setter
-public class Plan {
+public class TotalPlan {
     private long planId;
     private long userId;
     private String state; //도 단위 &
@@ -23,23 +22,18 @@ public class Plan {
     private int numOfPeople; //바꾸기
     private int budget;
     private int numOfComments;
-   // private MultipartFile image;
-    //private String image;
     private String imgSrc;
     private LocalDate startDate;
     private LocalDate endDate;
     private String title;
     private String description;
 
-    //private String img;
     private List<DayPlan> dayPlanList;
-    public Plan() {
+    public TotalPlan() {
 
     }
-    //시작 날짜 종료 날짜
 
-
-    public Plan(long planId, long userId, String state, boolean isPublic, boolean isFinished, int likes, int scraps, int numOfPeople, int budget, String imgSrc, LocalDate startDate, LocalDate endDate, String title, String description, List<DayPlan> dayPlanList,int numOfComments) {
+    public TotalPlan(long planId, long userId, String state, boolean isPublic, boolean isFinished, int likes, int scraps, int numOfPeople, int budget, String imgSrc, LocalDate startDate, LocalDate endDate, String title, String description, List<DayPlan> dayPlanList, int numOfComments) {
         this.planId = planId;
         this.userId = userId;
         this.state = state;

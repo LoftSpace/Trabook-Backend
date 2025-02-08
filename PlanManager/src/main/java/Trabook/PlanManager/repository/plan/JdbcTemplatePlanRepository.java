@@ -1,10 +1,9 @@
 package Trabook.PlanManager.repository.plan;
 
 import Trabook.PlanManager.domain.comment.Comment;
-import Trabook.PlanManager.dto.CommentRequestDto;
-import Trabook.PlanManager.domain.plan.Plan;
-import Trabook.PlanManager.dto.PlanCreateDto;
-import Trabook.PlanManager.domain.user.User;
+import Trabook.PlanManager.domain.plan.PlanBasicInfo;
+import Trabook.PlanManager.domain.plan.TotalPlan;
+import Trabook.PlanManager.dto.PlanCreateRequestDto;
 import Trabook.PlanManager.response.PlanListResponseDTO;
 import Trabook.PlanManager.domain.plan.DayPlan;
 import Trabook.PlanManager.response.PlanResponseDTO;
@@ -30,17 +29,17 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
 
 
     @Override
-    public long createPlan(PlanCreateDto planCreateDTO) {
+    public long createPlan(PlanBasicInfo planBasicInfo) {
         String sql = "INSERT INTO Plan(userId,state,startDate,endDate)" +
                 "VALUES(?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         long planId;
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql,new String[]{"planId"});
-            ps.setLong(1,planCreateDTO.getUserId());
-            ps.setString(2,planCreateDTO.getState());
-            ps.setDate(3, Date.valueOf(planCreateDTO.getStartDate()));
-            ps.setDate(4, Date.valueOf(planCreateDTO.getEndDate()));
+            ps.setLong(1, planBasicInfo.getUserId());
+            ps.setString(2, planBasicInfo.getState());
+            ps.setDate(3, Date.valueOf(planBasicInfo.getStartDate()));
+            ps.setDate(4, Date.valueOf(planBasicInfo.getEndDate()));
             return ps;
         },keyHolder);
         planId = keyHolder.getKey().longValue();
@@ -64,30 +63,30 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
     }
 
     @Override
-    public long updatePlan(Plan plan) {
+    public long updatePlan(TotalPlan totalPlan) {
         String sql = "UPDATE Plan SET userId = ?,likes = ?, scraps = ?, title=?, description = ?," +
                 " isPublic = ?,isFinished=?, numOfPeople = ?, budget = ?, planId=?,state=?,imgSrc=?,startDate=?, endDate=? " +
                 "WHERE planId= ?";
         int update = jdbcTemplate.update(sql,
-                plan.getUserId(),
-                plan.getLikes(),
-                plan.getScraps(),
-                plan.getTitle(),
-                plan.getDescription(),
-                plan.isPublic(),
-                plan.isFinished(),
-                plan.getNumOfPeople(),
-                plan.getBudget(),
-                plan.getPlanId(),
-                plan.getState(),
-                plan.getImgSrc(),
+                totalPlan.getUserId(),
+                totalPlan.getLikes(),
+                totalPlan.getScraps(),
+                totalPlan.getTitle(),
+                totalPlan.getDescription(),
+                totalPlan.isPublic(),
+                totalPlan.isFinished(),
+                totalPlan.getNumOfPeople(),
+                totalPlan.getBudget(),
+                totalPlan.getPlanId(),
+                totalPlan.getState(),
+                totalPlan.getImgSrc(),
 
-                plan.getStartDate(),
-                plan.getEndDate(),
-                plan.getPlanId());
+                totalPlan.getStartDate(),
+                totalPlan.getEndDate(),
+                totalPlan.getPlanId());
 
-        System.out.println(plan.getPlanId());
-        return plan.getPlanId();
+        System.out.println(totalPlan.getPlanId());
+        return totalPlan.getPlanId();
 
     }
 
@@ -147,9 +146,9 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
     }
 
     @Override
-    public Optional<Plan> findById(long planId){
+    public Optional<TotalPlan> findById(long planId){
         String sql = "SELECT * FROM Plan WHERE planId = ?;";
-        List<Plan> result = jdbcTemplate.query(sql, planRowMapper(), planId);
+        List<TotalPlan> result = jdbcTemplate.query(sql, planRowMapper(), planId);
         return result.stream().findAny();
     }
 
@@ -172,18 +171,18 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
                 "inner join `Schedule` s on dp.planId = s.planId and dp.day = s.day " +
                 "where p.planId = ? ";
 
-        Plan result = jdbcTemplate.query(sql, new Object[]{planId}, rs -> {
+        TotalPlan result = jdbcTemplate.query(sql, new Object[]{planId}, rs -> {
             int rowNum = 0;
-            Plan plan = new Plan();
+            TotalPlan totalPlan = new TotalPlan();
             while (rs.next()) {
                 if (rowNum == 0) {
-                    plan = planRowMapper().mapRow(rs, rs.getRow());
-                    plan.setDayPlanList(new ArrayList<>());
+                    totalPlan = planRowMapper().mapRow(rs, rs.getRow());
+                    totalPlan.setDayPlanList(new ArrayList<>());
                     rowNum++;
                 } else {
                     DayPlan dayPlan = dayPlanRowMapper().mapRow(rs, rs.getRow());
                     dayPlan.setScheduleList(new ArrayList<>());
-                    plan.getDayPlanList().add(dayPlan);
+                    totalPlan.getDayPlanList().add(dayPlan);
                     //DayPlan.Schedule schedule = scheduleRowMapperForTotalPlan().mapRow(rs, rs.getRow());
                     DayPlan.Schedule schedule = scheduleRowMapper().mapRow(rs,rs.getRow());
                     dayPlan.getScheduleList().add(schedule);
@@ -191,18 +190,18 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
                 }
 
             }
-            return plan;
+            return totalPlan;
         });
 
         PlanResponseDTO planResponseDTO = new PlanResponseDTO();
-        planResponseDTO.setPlan(result);
+        planResponseDTO.setTotalPlan(result);
         return planResponseDTO;
     }
 
     @Override
-    public Optional<Plan> findPlanByUserAndName(long userId, String planName) {
+    public Optional<TotalPlan> findPlanByUserAndName(long userId, String planName) {
 
-        List<Plan> result = jdbcTemplate.query("SELECT * FROM Plan WHERE userId = ? AND title = ?", planRowMapper(), userId, planName);
+        List<TotalPlan> result = jdbcTemplate.query("SELECT * FROM Plan WHERE userId = ? AND title = ?", planRowMapper(), userId, planName);
         return result.stream().findAny();
     }
 
@@ -426,38 +425,38 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
     public void clearStore() {
     }
 
-    private RowMapper<Plan> planRowMapper() {
-        return new RowMapper<Plan>() {
+    private RowMapper<TotalPlan> planRowMapper() {
+        return new RowMapper<TotalPlan>() {
             @Override
-            public Plan mapRow(ResultSet rs, int rowNum) throws SQLException {
-                Plan plan = new Plan();
-                plan.setTitle(rs.getString("title"));
-                plan.setUserId(rs.getLong("userId"));
-                plan.setPlanId(rs.getLong("planId"));
-                plan.setLikes(rs.getInt("likes"));
-                plan.setScraps(rs.getInt("scraps"));
-                plan.setPublic(rs.getBoolean("isPublic"));
-                plan.setState(rs.getString("state"));
-                plan.setImgSrc(rs.getString("imgSrc"));
-                plan.setBudget(rs.getInt("budget"));
-                plan.setNumOfPeople(rs.getInt("numOfPeople"));
-                plan.setDescription(rs.getString("description"));
-                plan.setNumOfComments(rs.getInt("numOfComment"));
+            public TotalPlan mapRow(ResultSet rs, int rowNum) throws SQLException {
+                TotalPlan totalPlan = new TotalPlan();
+                totalPlan.setTitle(rs.getString("title"));
+                totalPlan.setUserId(rs.getLong("userId"));
+                totalPlan.setPlanId(rs.getLong("planId"));
+                totalPlan.setLikes(rs.getInt("likes"));
+                totalPlan.setScraps(rs.getInt("scraps"));
+                totalPlan.setPublic(rs.getBoolean("isPublic"));
+                totalPlan.setState(rs.getString("state"));
+                totalPlan.setImgSrc(rs.getString("imgSrc"));
+                totalPlan.setBudget(rs.getInt("budget"));
+                totalPlan.setNumOfPeople(rs.getInt("numOfPeople"));
+                totalPlan.setDescription(rs.getString("description"));
+                totalPlan.setNumOfComments(rs.getInt("numOfComment"));
                 Date startDate = rs.getDate("startDate");
 
                 if (startDate != null) {
-                    plan.setStartDate(startDate.toLocalDate());
+                    totalPlan.setStartDate(startDate.toLocalDate());
                 } else {
-                    plan.setStartDate(null); // 또는 기본값 설정
+                    totalPlan.setStartDate(null); // 또는 기본값 설정
                 }
 
                 Date endDate = rs.getDate("endDate");
                 if (endDate != null) {
-                    plan.setEndDate(endDate.toLocalDate());
+                    totalPlan.setEndDate(endDate.toLocalDate());
                 } else {
-                    plan.setEndDate(null); // 또는 기본
+                    totalPlan.setEndDate(null); // 또는 기본
                 }
-                return plan;
+                return totalPlan;
             }
         };
     }

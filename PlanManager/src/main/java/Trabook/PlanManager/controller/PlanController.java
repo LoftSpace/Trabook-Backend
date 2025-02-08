@@ -1,21 +1,18 @@
 package Trabook.PlanManager.controller;
 
-import Trabook.PlanManager.domain.comment.Comment;
 import Trabook.PlanManager.domain.plan.*;
-import Trabook.PlanManager.domain.user.User;
 
-import Trabook.PlanManager.dto.PlanCreateDto;
+import Trabook.PlanManager.dto.PlanCreateRequestDto;
 import Trabook.PlanManager.dto.PlanCreateResponseDto;
 import Trabook.PlanManager.dto.PlanIdDTO;
 import Trabook.PlanManager.response.*;
 
 import Trabook.PlanManager.service.PlanService;
 import Trabook.PlanManager.service.file.FileUploadService;
-import Trabook.PlanManager.service.webclient.WebClientService;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 import org.springframework.http.HttpStatus;
@@ -26,33 +23,24 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/plan")
 public class PlanController {
 
-    private final WebClientService webClientService;
+
     private final PlanService planService;
     private final FileUploadService fileUploadService;
 
-    @Autowired
-    public PlanController(WebClientService webClientService, PlanService planService, FileUploadService fileUploadService) {
-        this.webClientService = webClientService;
-        this.planService = planService;
-        this.fileUploadService = fileUploadService;
-    }
-
     @ResponseBody
     @PostMapping("/create")
-    public ResponseEntity<PlanCreateResponseDto> createPlan(@RequestBody PlanCreateDto planCreateDTO, @RequestHeader("userId") long userId) throws FileNotFoundException {
-        planCreateDTO.setUserId(userId);
-        Long planId = planService.createPlan(planCreateDTO);
+    public ResponseEntity<PlanCreateResponseDto> createPlan(@RequestBody PlanCreateRequestDto planCreateRequestDTO, @RequestHeader("userId") Long userId) throws FileNotFoundException {
+        Long planId = planService.createPlan(planCreateRequestDTO,userId);
         String fileName = fileUploadService.uploadDefaultImage(planId);
         PlanCreateResponseDto planCreateResponseDTO = new PlanCreateResponseDto(planId,"create complete","https://storage.googleapis.com/trabook-20240822/"+fileName);
         return new ResponseEntity<>(planCreateResponseDTO, HttpStatus.OK);
@@ -61,11 +49,10 @@ public class PlanController {
 
     @ResponseBody
     @PatchMapping("/update")
-    public ResponseEntity<PlanUpdateResponseDTO> updatePlan(@RequestPart("plan") Plan plan,
+    public ResponseEntity<PlanUpdateResponseDTO> updatePlan(@RequestPart("plan") TotalPlan totalPlan,
                                                             @RequestPart(value = "image",required = false) MultipartFile image) {
 
-
-        long planId = planService.updatePlan(plan);
+        long planId = planService.updatePlan(totalPlan);
         if(planId == 0)
             return new ResponseEntity<>(new PlanUpdateResponseDTO(-1,"no plan exists"), HttpStatus.NOT_FOUND);
         try {
@@ -128,7 +115,6 @@ public class PlanController {
     public ResponseEntity<?> deletePlan(@RequestParam("planId") long planId,@RequestHeader("userId") Long userId) {
         if(userId == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인 필요");
-
         try {
             planService.deletePlan(planId,userId);
             return ResponseEntity.ok("계획 삭제 성공");
@@ -137,7 +123,6 @@ public class PlanController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
     }
 
     @ResponseBody
