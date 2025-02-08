@@ -43,9 +43,10 @@ public class PlanService {
     private final RedisTemplate<String, String> redisTemplate;
     private final WebClientService webClientService;
     private final FileUploadService fileUploadService;
+
     @Transactional
     public String createPlan(PlanCreateRequestDto planCreateRequestDTO,Long userId) throws FileNotFoundException {
-        PlanBasicInfo planBasicInfo = planCreateRequestDTO.toEntity();
+        PlanBasicInfo planBasicInfo = planCreateRequestDTO.toEntity(userId);
         long createdPlanId = planRepository.createPlan(planBasicInfo);
         return fileUploadService.uploadDefaultImage(createdPlanId);
     }

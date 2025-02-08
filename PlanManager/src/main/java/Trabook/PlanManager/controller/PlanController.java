@@ -43,7 +43,7 @@ public class PlanController {
         try{
             String imagePath = planService.createPlan(planCreateRequestDTO,userId);
             return ResponseEntity.ok(imagePath);
-        } catch(FileNotFoundException e){
+        } catch(RuntimeException e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 
