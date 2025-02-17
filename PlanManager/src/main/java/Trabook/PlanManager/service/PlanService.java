@@ -345,12 +345,12 @@ public class PlanService {
     }
 
     @Transactional
-    public String scrapPlan(long planId, long userId) {
+    public void scrapPlan(long planId, long userId) {
         planRepository.findById(planId)
-                .orElseThrow(()-> new IllegalArgumentException(String.format("no plan exists")));
+                .orElseThrow(()-> new IllegalArgumentException("일치하는 계획 게시글 없음"));
         planRepository.scrapPlan(userId,planId);
         planRepository.upScrap(planId);
-        return "scrap complete";
+
     }
 
     @Transactional

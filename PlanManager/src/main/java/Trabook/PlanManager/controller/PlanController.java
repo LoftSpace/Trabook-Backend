@@ -96,15 +96,13 @@ public class PlanController {
 
     @ResponseBody
     @PostMapping("/scrap")
-    public ResponseEntity<ResponseMessage> scrapPlan(@RequestBody PlanActionRequestDto planActionRequestDto, @RequestHeader(value = "userId") long userId) {
-
-        String message = planService.scrapPlan(planActionRequestDto.getPlanId(),userId);
-        if (Objects.equals(message, "no plan exists")){
-            return new ResponseEntity<>(new ResponseMessage("no plan exists"), HttpStatus.NOT_FOUND);
-        }else if(Objects.equals(message, "already scrap error")){
-            return new ResponseEntity<>(new ResponseMessage("already scrap error"), HttpStatus.CONFLICT);
+    public ResponseEntity<?> scrapPlan(@RequestBody PlanActionRequestDto planActionRequestDto, @RequestHeader(value = "userId") long userId) {
+        try {
+            planService.scrapPlan(planActionRequestDto.getPlanId(), userId);
+            return ResponseEntity.ok("스크랩 성공");
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
-        return ResponseEntity.ok(new ResponseMessage(message));
 
     }
 
