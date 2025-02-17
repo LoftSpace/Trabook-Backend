@@ -1,0 +1,576 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="241ce8b2-a19f-4026-ba8f-9a75389130d2" name="Changes" comment="refactor : 여행 게시글 스크랩요청 에러 메세지 서비스레이어에서만 다루게 변경">
+      <change beforePath="$PROJECT_DIR$/../.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/Backend.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/.idea/workspace.xml" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="back" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="RESET_MODE" value="MIXED" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2nkabETnlfmvnzzfXKqZfeZkh48" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.PlanManagerApplication.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.CommentServiceParallelTest.commentServiceParellelTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.CommentServiceParallelTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.PlanServiceConcurrencyTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.PlanServiceConcurrencyTest.updateLikeConcurrencyTest.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/hyj/IdeaProjects/TraBook/PlanManager&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="Trabook.PlanManager.service" />
+      <recent name="Trabook.PlanManager" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.PlanManagerApplication">
+    <configuration name="PlanManagerApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Trabook.PlanManager.PlanManagerApplication" />
+      <module name="PlanManager.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Trabook.PlanManager.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CommentServiceParallelTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="PlanManager.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Trabook.PlanManager.service.comment.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Trabook.PlanManager.service.comment" />
+      <option name="MAIN_CLASS_NAME" value="Trabook.PlanManager.service.comment.CommentServiceParallelTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CommentServiceParallelTest.commentServiceParellelTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="PlanManager.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Trabook.PlanManager.service.comment.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Trabook.PlanManager.service.comment" />
+      <option name="MAIN_CLASS_NAME" value="Trabook.PlanManager.service.comment.CommentServiceParallelTest" />
+      <option name="METHOD_NAME" value="commentServiceParellelTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PlanServiceConcurrencyTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="PlanManager.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Trabook.PlanManager.service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Trabook.PlanManager.service" />
+      <option name="MAIN_CLASS_NAME" value="Trabook.PlanManager.service.PlanServiceConcurrencyTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PlanServiceConcurrencyTest.updateLikeConcurrencyTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="PlanManager.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Trabook.PlanManager.service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Trabook.PlanManager.service" />
+      <option name="MAIN_CLASS_NAME" value="Trabook.PlanManager.service.PlanServiceConcurrencyTest" />
+      <option name="METHOD_NAME" value="updateLikeConcurrencyTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.PlanManagerApplication" />
+        <item itemvalue="JUnit.CommentServiceParallelTest" />
+        <item itemvalue="JUnit.CommentServiceParallelTest.commentServiceParellelTest" />
+        <item itemvalue="JUnit.PlanServiceConcurrencyTest" />
+        <item itemvalue="JUnit.PlanServiceConcurrencyTest.updateLikeConcurrencyTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="241ce8b2-a19f-4026-ba8f-9a75389130d2" name="Changes" comment="" />
+      <created>1729519597068</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1729519597068</updated>
+    </task>
+    <task id="LOCAL-00001" summary="getPlan에서 plan,dayplan,schedule각각의 쿼리 여러개 날리기 -&gt; 하나의 쿼리로 한번에 처리">
+      <option name="closed" value="true" />
+      <created>1729663775425</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1729663775425</updated>
+    </task>
+    <task id="LOCAL-00002" summary="각각의 schedule에 대해 하나의 place 가져오기 쿼리 여러번 날리기 -&gt; planId로 place들 한꺼번에 가져와서 처리하기">
+      <option name="closed" value="true" />
+      <created>1729663887529</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1729663887529</updated>
+    </task>
+    <task id="LOCAL-00003" summary="fix : planService.getTag - db가 아닌 객체 접근으로 변경">
+      <option name="closed" value="true" />
+      <created>1730278523951</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1730278523951</updated>
+    </task>
+    <task id="LOCAL-00004" summary="fix : 인덱스 생성을 통한 쿼리에서 file sort 삭제">
+      <option name="closed" value="true" />
+      <created>1730623815315</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1730623815315</updated>
+    </task>
+    <task id="LOCAL-00005" summary="fix : get plan - webflux 사용 취소 다시 알아보기">
+      <option name="closed" value="true" />
+      <created>1730649283023</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1730649283023</updated>
+    </task>
+    <task id="LOCAL-00006" summary="fix : get plan - webflux 사용 취소 다시 알아보기">
+      <option name="closed" value="true" />
+      <created>1730649348416</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1730649348416</updated>
+    </task>
+    <task id="LOCAL-00007" summary="fix : 인기 plan레디스 사용. 게시글 내용(hash) , 좋아요(zset)로 분리해서 캐시에 저장. 좋아요는 write back, 내용은 write through로 구현. TODO : 인기 목록에 있는 좋아요수 업데이트 안되는 것 수정">
+      <option name="closed" value="true" />
+      <created>1731322422237</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1731322422237</updated>
+    </task>
+    <task id="LOCAL-00008" summary="fix : 댓글달기시, 데드락 문제 비관적락으로 해결">
+      <option name="closed" value="true" />
+      <created>1731566513373</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1731566513373</updated>
+    </task>
+    <task id="LOCAL-00009" summary="fix : 댓글달기시, 데드락 문제 비관적락으로 해결">
+      <option name="closed" value="true" />
+      <created>1731649824644</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1731649824644</updated>
+    </task>
+    <task id="LOCAL-00010" summary="refactor : 댓글 컨트롤러 분리">
+      <option name="closed" value="true" />
+      <created>1732016566108</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1732016566108</updated>
+    </task>
+    <task id="LOCAL-00011" summary="refactor : 안쓰이는 파일들 정리">
+      <option name="closed" value="true" />
+      <created>1732018301756</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1732018301756</updated>
+    </task>
+    <task id="LOCAL-00012" summary="refactor : 안쓰이는 파일들 정리">
+      <option name="closed" value="true" />
+      <created>1736319876754</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1736319876754</updated>
+    </task>
+    <task id="LOCAL-00013" summary="refactor : plan service에 스크랩, 댓글, 좋아요 로직 리펙토링">
+      <option name="closed" value="true" />
+      <created>1736492968618</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1736492968618</updated>
+    </task>
+    <task id="LOCAL-00014" summary="refactor : 여행지 관리 부분 - DTO에서 필수 인 부분만 원시타입으로 변경, destinationService 에러 처리 리펙토링">
+      <option name="closed" value="true" />
+      <created>1738824121273</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1738824121273</updated>
+    </task>
+    <task id="LOCAL-00015" summary="refactor : Destination controller 요청 dto 기본 생성자, access level 설정">
+      <option name="closed" value="true" />
+      <created>1738824814290</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1738824814290</updated>
+    </task>
+    <task id="LOCAL-00016" summary="refactor : 스크랩 여부를 여행지 객체에서 DTO로 이동, DestinationService의 메소드 단일 책임으로 변경">
+      <option name="closed" value="true" />
+      <created>1738827037501</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1738827037501</updated>
+    </task>
+    <task id="LOCAL-00017" summary="refactor : 스크랩 여부를 여행지 객체에서 DTO로 이동, DestinationService의 메소드 단일 책임으로 변경">
+      <option name="closed" value="true" />
+      <created>1738827169958</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1738827169958</updated>
+    </task>
+    <task id="LOCAL-00018" summary="fix : 여행지+사진 모달dto가 여행지 모달dto 상속받을때 생성자에서 전체 매게변수 전달해야하는 문제 해결">
+      <option name="closed" value="true" />
+      <created>1738827790868</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1738827790868</updated>
+    </task>
+    <task id="LOCAL-00019" summary="refactor : 여행지 모달 응답 객체 빌더 패턴 적용">
+      <option name="closed" value="true" />
+      <created>1738828181733</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1738828181733</updated>
+    </task>
+    <task id="LOCAL-00020" summary="refactor : CommentRequestDto null이면 안되는 것만 원시타입으로 두고 나머지는 참조타입으로 변경">
+      <option name="closed" value="true" />
+      <created>1738909079367</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1738909079367</updated>
+    </task>
+    <task id="LOCAL-00021" summary="refactor : PlanComment컨트롤러 addComment 메소드 리페토링 - 유저 아이디 null확인,응답dto 빌더 패턴적용(가독성) &#10;TODO: 해당 컨트롤러에서 역할 댓글 객체에 유저 아이디 부여, 응답 메시지 부여를 PlanService에 할당 -&gt; PlanServic에서 단일 책임 고려하여 응답객체 생성 메소드,댓글 생성 메소드로 분리">
+      <option name="closed" value="true" />
+      <created>1738909613316</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1738909613316</updated>
+    </task>
+    <task id="LOCAL-00022" summary="PlanController 주석 제거">
+      <option name="closed" value="true" />
+      <created>1738909732654</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1738909732654</updated>
+    </task>
+    <task id="LOCAL-00023" summary="refactor : 댓글 삭제 컨트롤러 에러 처리">
+      <option name="closed" value="true" />
+      <created>1738910052567</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1738910052567</updated>
+    </task>
+    <task id="LOCAL-00024" summary="refactor : 댓글 객체에 대댓들인지 확인하는 인스턴스 메서드 추가, deleteComment 메소드에 적용">
+      <option name="closed" value="true" />
+      <created>1738910456347</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1738910456347</updated>
+    </task>
+    <task id="LOCAL-00025" summary="refactor : 여행지 스크랩 repository - 스크랩 데이터 저장, 여행지의 스크랩횟수 +1로 분리">
+      <option name="closed" value="true" />
+      <created>1738912608546</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1738912608546</updated>
+    </task>
+    <task id="LOCAL-00026" summary="refactor : (DI)DestinationRepository -&gt; DestinationService by @RequiredArgsConstructor">
+      <option name="closed" value="true" />
+      <created>1738913123216</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1738913123216</updated>
+    </task>
+    <task id="LOCAL-00027" summary="refactor : (DI)DestinationRepository -&gt; DestinationService by @RequiredArgsConstructor">
+      <option name="closed" value="true" />
+      <created>1738913327248</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1738913327248</updated>
+    </task>
+    <task id="LOCAL-00028" summary="refactor : 댓글 추가 요청dto -&gt; 댓글 객체로 변환해서 비즈니스 로직 처리.&#10;TODO: 댓글 요청 dto 처리 서비스 레이어 추가">
+      <option name="closed" value="true" />
+      <created>1738916896675</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1738916896675</updated>
+    </task>
+    <task id="LOCAL-00029" summary="fix : 댓글 객체와 User객체 분리로 인한 rowmapper수정">
+      <option name="closed" value="true" />
+      <created>1738917022231</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1738917022231</updated>
+    </task>
+    <task id="LOCAL-00030" summary="refactor : 전체 계획 가져오기 api controller layer, service layer 리팩토링&#10;TODO: service layer에서 응답 객체에 메소드 반환값 담을 때,get vs set 결정">
+      <option name="closed" value="true" />
+      <created>1738922771075</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1738922771075</updated>
+    </task>
+    <task id="LOCAL-00031" summary="refactor : 전체 계획 가져오기 api controller layer, service layer 리팩토링&#10;TODO: service layer에서 응답 객체에 메소드 반환값 담을 때,get vs set 결정">
+      <option name="closed" value="true" />
+      <created>1738922779602</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1738922779602</updated>
+    </task>
+    <task id="LOCAL-00032" summary="refactor : PlanController 안쓰이는 메소드 삭제">
+      <option name="closed" value="true" />
+      <created>1738922875125</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1738922875125</updated>
+    </task>
+    <task id="LOCAL-00033" summary="refactor : plan삭제 로직 컨트롤러에서 비즈니스 로직 제거">
+      <option name="closed" value="true" />
+      <created>1738923420150</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1738923420150</updated>
+    </task>
+    <task id="LOCAL-00034" summary="refactor : 서비스 레이어에서 plan생성 요청 dto와 plan기본정보 객체 분리,">
+      <option name="closed" value="true" />
+      <created>1738994946425</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1738994946425</updated>
+    </task>
+    <task id="LOCAL-00035" summary="refactor : 파일 업로드 - 서비스 레이어에서 처리, 컨트롤러에서 비즈니스 로직 제거">
+      <option name="closed" value="true" />
+      <created>1738995402175</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1738995402175</updated>
+    </task>
+    <task id="LOCAL-00036" summary="fix : plan기본정보 객체에 유저 아이디 담기">
+      <option name="closed" value="true" />
+      <created>1738995759980</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1738995759980</updated>
+    </task>
+    <task id="LOCAL-00037" summary="refactor : 여행 게시글에 대해 댓글, 스크랩 요청 dto 네이밍 수정 : planIdRequestDTO -&gt; PlanActionRequestDto">
+      <option name="closed" value="true" />
+      <created>1739791608458</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1739791608458</updated>
+    </task>
+    <task id="LOCAL-00038" summary="refactor : 여행 게시글 좋아요 에러처리">
+      <option name="closed" value="true" />
+      <created>1739791835455</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1739791835455</updated>
+    </task>
+    <task id="LOCAL-00039" summary="refactor : 여행 게시글 스크랩요청 에러 메세지 서비스레이어에서만 다루게 변경">
+      <option name="closed" value="true" />
+      <created>1739791967341</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1739791967341</updated>
+    </task>
+    <task id="LOCAL-00040" summary="refactor : 여행 게시글 스크랩요청 에러 메세지 서비스레이어에서만 다루게 변경">
+      <option name="closed" value="true" />
+      <created>1739792106284</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1739792106284</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="refactor : 안쓰이는 파일들 정리" />
+    <MESSAGE value="refactor : plan service에 스크랩, 댓글, 좋아요 로직 리펙토링" />
+    <MESSAGE value="refactor : 여행지 관리 부분 - DTO에서 필수 인 부분만 원시타입으로 변경, destinationService 에러 처리 리펙토링" />
+    <MESSAGE value="refactor : Destination controller 요청 dto 기본 생성자, access level 설정" />
+    <MESSAGE value="refactor : 스크랩 여부를 여행지 객체에서 DTO로 이동, DestinationService의 메소드 단일 책임으로 변경" />
+    <MESSAGE value="fix : 여행지+사진 모달dto가 여행지 모달dto 상속받을때 생성자에서 전체 매게변수 전달해야하는 문제 해결" />
+    <MESSAGE value="refactor : 여행지 모달 응답 객체 빌더 패턴 적용" />
+    <MESSAGE value="refactor : CommentRequestDto null이면 안되는 것만 원시타입으로 두고 나머지는 참조타입으로 변경" />
+    <MESSAGE value="refactor : PlanComment컨트롤러 addComment 메소드 리페토링 - 유저 아이디 null확인,응답dto 빌더 패턴적용(가독성) &#10;TODO: 해당 컨트롤러에서 역할 댓글 객체에 유저 아이디 부여, 응답 메시지 부여를 PlanService에 할당 -&gt; PlanServic에서 단일 책임 고려하여 응답객체 생성 메소드,댓글 생성 메소드로 분리" />
+    <MESSAGE value="PlanController 주석 제거" />
+    <MESSAGE value="refactor : 댓글 삭제 컨트롤러 에러 처리" />
+    <MESSAGE value="refactor : 댓글 객체에 대댓들인지 확인하는 인스턴스 메서드 추가, deleteComment 메소드에 적용" />
+    <MESSAGE value="refactor : 여행지 스크랩 repository - 스크랩 데이터 저장, 여행지의 스크랩횟수 +1로 분리" />
+    <MESSAGE value="refactor : (DI)DestinationRepository -&gt; DestinationService by @RequiredArgsConstructor" />
+    <MESSAGE value="refactor : 댓글 추가 요청dto -&gt; 댓글 객체로 변환해서 비즈니스 로직 처리.&#10;TODO: 댓글 요청 dto 처리 서비스 레이어 추가" />
+    <MESSAGE value="fix : 댓글 객체와 User객체 분리로 인한 rowmapper수정" />
+    <MESSAGE value="refactor : 전체 계획 가져오기 api controller layer, service layer 리팩토링&#10;TODO: service layer에서 응답 객체에 메소드 반환값 담을 때,get vs set 결정" />
+    <MESSAGE value="refactor : PlanController 안쓰이는 메소드 삭제" />
+    <MESSAGE value="refactor : plan삭제 로직 컨트롤러에서 비즈니스 로직 제거" />
+    <MESSAGE value="refactor : 서비스 레이어에서 plan생성 요청 dto와 plan기본정보 객체 분리," />
+    <MESSAGE value="refactor : 파일 업로드 - 서비스 레이어에서 처리, 컨트롤러에서 비즈니스 로직 제거" />
+    <MESSAGE value="fix : plan기본정보 객체에 유저 아이디 담기" />
+    <MESSAGE value="refactor : 여행 게시글에 대해 댓글, 스크랩 요청 dto 네이밍 수정 : planIdRequestDTO -&gt; PlanActionRequestDto" />
+    <MESSAGE value="refactor : 여행 게시글 좋아요 에러처리" />
+    <MESSAGE value="refactor : 여행 게시글 스크랩요청 에러 메세지 서비스레이어에서만 다루게 변경" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor : 여행 게시글 스크랩요청 에러 메세지 서비스레이어에서만 다루게 변경" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/../community-service/src/main/java/Trabook/PlanManager/PlanManagerApplication.java</url>
+          <line>12</line>
+          <properties class="Trabook.PlanManager.PlanManagerApplication">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
