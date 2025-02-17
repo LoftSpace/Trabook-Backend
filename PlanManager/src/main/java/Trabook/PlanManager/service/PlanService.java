@@ -329,19 +329,17 @@ public class PlanService {
     }
 
     @Transactional
-    public String likePlan(long planId, long userId) {
+    public void likePlan(long planId, long userId) {
 
         if(isPlanExistInRanking(planId)){
             ZSetOperations<String, String> zsetOps = redisTemplate.opsForZSet();
             String planKey = "plan:content:" + planId;
             zsetOps.incrementScore("topPlans",planKey,1);
-            return "like complete";
         } else {
             planRepository.findById(planId)
-                    .orElseThrow(()-> new IllegalArgumentException(String.format("plan not found")));
+                    .orElseThrow(()-> new IllegalArgumentException("일치하는 계획 게시글 없음"));
             planRepository.likePlan(userId,planId);
             planRepository.upLike(planId);
-            return "like complete";
         }
 
     }

@@ -84,15 +84,13 @@ public class PlanController {
 
     @ResponseBody
     @PostMapping("/like")
-    public ResponseEntity<ResponseMessage> likePlan(@RequestBody PlanActionRequestDto planActionRequestDto, @RequestHeader("userId") Long userId) {
-
-        String message = planService.likePlan(planActionRequestDto.getPlanId(),userId);
-        if (Objects.equals(message,"like already exists" )){
-            return new ResponseEntity<>(new ResponseMessage("like already exists"), HttpStatus.CONFLICT);
+    public ResponseEntity<?> likePlan(@RequestBody PlanActionRequestDto planActionRequestDto, @RequestHeader("userId") Long userId) {
+        try {
+            planService.likePlan(planActionRequestDto.getPlanId(), userId);
+            return ResponseEntity.ok("좋아요 성공");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
-
-        return ResponseEntity.ok(new ResponseMessage(message));
-
     }
 
 
