@@ -325,27 +325,5 @@ review 추가되면 review 랑 조인 + ORDER BY review DESC 필요
             }
         };
     }
-/*
-    private RowMapper<PlaceForModalDTO> placeForModalRowMapper() {
-        return new RowMapper<PlaceForModalDTO>() {
-            public PlaceForModalDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
-                PlaceForModalDTO placeForModalDTO = new PlaceForModalDTO();
-                placeForModalDTO.setPlaceId(rs.getLong("placeId"));
-                placeForModalDTO.setPlaceName(rs.getString("placeName"));
-                placeForModalDTO.setPlaceId(rs.getLong("placeId"));
-                placeForModalDTO.setNumOfAdded(rs.getInt("numOfAdded"));
-                placeForModalDTO.setAddress(rs.getString("address"));
-                placeForModalDTO.setLatitude(rs.getDouble("latitude"));
-                placeForModalDTO.setLongitude(rs.getDouble("longitude"));
-                placeForModalDTO.setCategory(rs.getString("category"));
-                placeForModalDTO.setSubcategory(rs.getString("subcategory"));
-                placeForModalDTO.setCityId(rs.getLong("cityId"));
-                placeForModalDTO.setImageSrc(rs.getString("imageSrc"));
-                placeForModalDTO.setStar(rs.getLong("star"));
-                return placeForModalDTO;
-            }
-        };
-    }
 
- */
 }
