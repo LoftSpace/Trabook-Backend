@@ -3,8 +3,7 @@ package Trabook.PlanManager.controller;
 import Trabook.PlanManager.domain.plan.*;
 
 import Trabook.PlanManager.dto.PlanCreateRequestDto;
-import Trabook.PlanManager.dto.PlanCreateResponseDto;
-import Trabook.PlanManager.dto.PlanIdDTO;
+import Trabook.PlanManager.dto.PlanActionRequestDto;
 import Trabook.PlanManager.response.*;
 
 import Trabook.PlanManager.service.PlanService;
@@ -85,9 +84,9 @@ public class PlanController {
 
     @ResponseBody
     @PostMapping("/like")
-    public ResponseEntity<ResponseMessage> likePlan(@RequestBody PlanIdDTO planIdDTO, @RequestHeader("userId") long userId) {
+    public ResponseEntity<ResponseMessage> likePlan(@RequestBody PlanActionRequestDto planActionRequestDto, @RequestHeader("userId") Long userId) {
 
-        String message = planService.likePlan(planIdDTO.getPlanId(),userId);
+        String message = planService.likePlan(planActionRequestDto.getPlanId(),userId);
         if (Objects.equals(message,"like already exists" )){
             return new ResponseEntity<>(new ResponseMessage("like already exists"), HttpStatus.CONFLICT);
         }
@@ -99,9 +98,9 @@ public class PlanController {
 
     @ResponseBody
     @PostMapping("/scrap")
-    public ResponseEntity<ResponseMessage> scrapPlan(@RequestBody PlanIdDTO planIdDTO, @RequestHeader(value = "userId") long userId) {
+    public ResponseEntity<ResponseMessage> scrapPlan(@RequestBody PlanActionRequestDto planActionRequestDto, @RequestHeader(value = "userId") long userId) {
 
-        String message = planService.scrapPlan(planIdDTO.getPlanId(),userId);
+        String message = planService.scrapPlan(planActionRequestDto.getPlanId(),userId);
         if (Objects.equals(message, "no plan exists")){
             return new ResponseEntity<>(new ResponseMessage("no plan exists"), HttpStatus.NOT_FOUND);
         }else if(Objects.equals(message, "already scrap error")){

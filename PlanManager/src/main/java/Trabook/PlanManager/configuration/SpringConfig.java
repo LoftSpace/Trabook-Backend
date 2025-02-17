@@ -37,10 +37,6 @@ public class SpringConfig {
         return WebClient.create("http://35.216.124.162:4060");
    }
 
-    @Bean
-    public PlanService planService() {
-        return new PlanService(planRepository(),destinationRepository(), planListRepository(),redisTemplate);
-    }
 
     @Bean
     public PlanRepository planRepository() {
