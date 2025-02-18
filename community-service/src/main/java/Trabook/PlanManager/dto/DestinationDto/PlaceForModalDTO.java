@@ -3,9 +3,10 @@ package Trabook.PlanManager.dto.DestinationDto;
 import Trabook.PlanManager.domain.destination.Place;
 import Trabook.PlanManager.domain.destination.PlaceComment;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
-@Builder
+@SuperBuilder
 @Getter @Setter
 @AllArgsConstructor
 public class PlaceForModalDTO {
