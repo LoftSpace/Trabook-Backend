@@ -32,12 +32,14 @@ public class HottestPlanService {
         log.info("{} complete","인기게시글 업데이트 완료");
 
     }
+
     public void likePlan(long planId,long userId){
         RSet<String> userPlanLikeSet = redissonClient.getSet("plan:likes-user:" + planId);
         if(userPlanLikeSet.add(Long.toString(userId)))
             longRedisTemplate.opsForHash().increment("plan:likes", Long.toString(planId), 1);
 
     }
+
     // 인기 게시글 목록 가져오기
     public Set<Long> getHottestPlanIds() {
         return hottestPlanIds;
