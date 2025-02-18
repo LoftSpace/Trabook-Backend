@@ -29,13 +29,12 @@ public class WriteBackScheduler {
 
     //@Scheduled(fixedRate = 180000)
     public void writeBackUserLike() {
-        System.out.println("here");
+
         Set<Long> hottestPlanIds = hottestPlanService.getHottestPlanIds();
         for(Long hottestPlanId : hottestPlanIds){
             RSet<String> users = redissonClient.getSet("plan:likes-user:" + hottestPlanId);
-            System.out.println(users.isEmpty());
+
             for(String userId : users){
-                System.out.println(userId + " likes " + hottestPlanId);
                 planRepository.likePlan(Long.parseLong(userId),hottestPlanId);
             }
         }
@@ -44,7 +43,6 @@ public class WriteBackScheduler {
     private void updateLikes(Map<String,Integer> likesMap) {
         if(likesMap != null && !likesMap.isEmpty()){
             for (Map.Entry<String,Integer> entry : likesMap.entrySet()) {
-
                 Long planId = Long.parseLong(entry.getKey());
                 Integer likesCount = entry.getValue();
                 planRepository.updateLikes(planId, likesCount);
