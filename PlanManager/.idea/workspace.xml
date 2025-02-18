@@ -5,16 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="241ce8b2-a19f-4026-ba8f-9a75389130d2" name="Changes" comment="refactor : 여행 게시글 스크랩요청 에러 메세지 서비스레이어에서만 다루게 변경">
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/shelf/Uncommitted_changes_before_Update_at_2025__2__18__AM_1_31_[변경]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/shelf/Uncommitted_changes_before_Update_at_2025__2__18__AM_1_31___.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/../community-service/src/main/java/Trabook/PlanManager/Scheduler/WriteBackScheduler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../community-service/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../community-service/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../community-service/src/main/java/Trabook/PlanManager/PlanManagerApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../community-service/src/main/java/Trabook/PlanManager/PlanManagerApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../community-service/src/main/java/Trabook/PlanManager/Scheduler/Scheduler.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../community-service/src/main/java/Trabook/PlanManager/configuration/RedisConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../community-service/src/main/java/Trabook/PlanManager/configuration/RedisConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../community-service/src/main/java/Trabook/PlanManager/dto/DestinationDto/GetPlaceResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/../community-service/src/main/java/Trabook/PlanManager/dto/DestinationDto/GetPlaceResponseDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../community-service/src/main/java/Trabook/PlanManager/dto/DestinationDto/PlaceForModalDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../community-service/src/main/java/Trabook/PlanManager/dto/DestinationDto/PlaceForModalDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../community-service/src/main/java/Trabook/PlanManager/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../community-service/src/main/java/Trabook/PlanManager/controller/AdminController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../community-service/src/main/java/Trabook/PlanManager/repository/plan/JdbcTemplatePlanListRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../community-service/src/main/java/Trabook/PlanManager/repository/plan/JdbcTemplatePlanListRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../community-service/src/main/java/Trabook/PlanManager/repository/plan/JdbcTemplatePlanRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../community-service/src/main/java/Trabook/PlanManager/repository/plan/JdbcTemplatePlanRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../community-service/src/main/java/Trabook/PlanManager/service/PlanService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../community-service/src/main/java/Trabook/PlanManager/service/PlanService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../community-service/src/test/java/Trabook/PlanManager/service/PlanServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../community-service/src/test/java/Trabook/PlanManager/service/PlanServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../community-service/src/test/java/Trabook/PlanManager/service/comment/CommentServiceParallelTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../community-service/src/test/java/Trabook/PlanManager/service/comment/CommentServiceParallelTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +63,7 @@
     &quot;JUnit.PlanServiceConcurrencyTest.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.PlanServiceConcurrencyTest.updateLikeConcurrencyTest.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;distributed-lock-by-redis&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/hyj/IdeaProjects/TraBook/PlanManager&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,

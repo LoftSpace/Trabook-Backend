@@ -4,10 +4,12 @@ import Trabook.PlanManager.domain.comment.Comment;
 import Trabook.PlanManager.domain.plan.TotalPlan;
 import Trabook.PlanManager.repository.plan.PlanRepository;
 import Trabook.PlanManager.service.PlanService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -20,6 +22,8 @@ public class CommentServiceParallelTest {
     private TotalPlan totalPlan;
     private ExecutorService executorService;
     private CountDownLatch latch;
+    @Autowired
+    RedisTemplate<String, String> redisTemplate;
 
     @Autowired
     PlanRepository planRepository;
@@ -52,7 +56,7 @@ public class CommentServiceParallelTest {
         }
         latch.await();
 
-//        Assertions.assertThat(planService.getPlan(580,3L).getComments().size()).isEqualTo(27);
+
     }
 
 }
