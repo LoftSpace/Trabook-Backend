@@ -22,6 +22,11 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RSet;
+import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.geo.Point;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -31,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -41,9 +47,11 @@ public class PlanService {
     private final DestinationRepository destinationRepository;
     private final PlanListRepository planListRepository;
     private final RedisTemplate<String, String> redisTemplate;
+
     private final WebClientService webClientService;
     private final FileUploadService fileUploadService;
-
+    private final RedissonClient redissonClient;
+    private final HottestPlanService hottestPlanService;
     @Transactional
     public String createPlan(PlanCreateRequestDto planCreateRequestDTO,Long userId) throws FileNotFoundException {
         PlanBasicInfo planBasicInfo = planCreateRequestDTO.toEntity(userId);
@@ -329,17 +337,29 @@ public class PlanService {
     }
 
     @Transactional
-    public void likePlan(long planId, long userId) {
-
-        if(isPlanExistInRanking(planId)){
-            ZSetOperations<String, String> zsetOps = redisTemplate.opsForZSet();
-            String planKey = "plan:content:" + planId;
-            zsetOps.incrementScore("topPlans",planKey,1);
-        } else {
+    public void likePlan(long planId, long userId) throws Exception {
+        if(hottestPlanService.isHottestPlan(planId)) {
+                  hottestPlanService.likePlan(planId,userId);
+        }
+        else {
+            RLock lock = redissonClient.getLock("plan:likes:" + Long.toString(planId));
             planRepository.findById(planId)
                     .orElseThrow(()-> new IllegalArgumentException("일치하는 계획 게시글 없음"));
-            planRepository.likePlan(userId,planId);
-            planRepository.upLike(planId);
+
+            try {
+                if (!lock.tryLock(5L, 3L, TimeUnit.SECONDS))
+                    throw new RuntimeException("락 획득 실패");
+
+                planRepository.likePlan(userId,planId);
+                planRepository.upLike(planId);
+
+            } catch (Exception e) {
+                throw new Exception("디비 연산중 오류");
+            } finally {
+                if (lock != null && lock.isLocked())
+                    lock.unlock();
+
+            }
         }
 
     }

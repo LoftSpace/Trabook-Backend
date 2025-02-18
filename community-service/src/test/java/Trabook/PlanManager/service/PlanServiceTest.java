@@ -1,115 +1,106 @@
 package Trabook.PlanManager.service;
 
+import Trabook.PlanManager.domain.comment.Comment;
+import Trabook.PlanManager.domain.plan.TotalPlan;
+import Trabook.PlanManager.repository.plan.PlanRepository;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @SpringBootTest
 @Transactional
 public class PlanServiceTest {
 
-    @Autowired PlanService planService;
+    @Autowired
+    @Qualifier("redisTemplateForLong")
+    RedisTemplate<String, Integer> longRedisTemplate;
 
-/*
-    @Test
-    void createPlan() {
-        //given
-        Plan plan = new Plan(-1, 3, 1, true, 0, 0, "2024-08-20 10:00:00", "test", "test");
+    @Autowired
+    PlanRepository planRepository;
 
-        //when
-        long savedPlanId = planService.createPlan(plan, null);//plan with no schedule
-        Plan getPlan = planService.getPlan(savedPlanId).orElseThrow(() -> new AssertionError("Plan not found"));
-        //then
-        Assertions.assertThat(getPlan).usingRecursiveComparison().isEqualTo(plan);
+    @Autowired
+    PlanService planService;
+
+    @Autowired
+    HottestPlanService hottestPlanService;
+    private ExecutorService executorService;
+    private CountDownLatch latch;
+    private static final int TOTAL_COUNT = 100;
+
+    @BeforeEach
+    void setUp() {
+        executorService = Executors.newFixedThreadPool(TOTAL_COUNT);
+        latch = new CountDownLatch(TOTAL_COUNT);
+        hottestPlanService.updateHottestPlanIds();
     }
 
     @Test
-    void getPlan() {
-        //given
-        long noPlanId = 0;
-        Plan plan = new Plan(-1, 3, 1, true, 0, 0, "2024-08-20 10:00:00", "test", "test");
-        long existingPlanId =planService.createPlan(plan,null);
-        //when
-        Optional<Plan> planFound = planService.getPlan(existingPlanId);
-        Optional<Plan> noPlan = planService.getPlan(noPlanId);
-        //then
-        Assertions.assertThat(noPlan).isEmpty();
-        Assertions.assertThat(planFound.get().getPlanId()).isEqualTo(existingPlanId);
-    }
+    void hottestPlanLikeParallelTest() throws InterruptedException {
+        HashOperations<String, String,Integer> hashOps = longRedisTemplate.opsForHash();
+        Integer before = hashOps.get("plan:likes", Long.toString(530));
 
-    @Test
-    void deletePlan() {
-        //given
-        Plan plan = new Plan(-1, 3, 1, true, 0, 0, "2024-08-20 10:00:00", "test", "test");
-        long planId = planService.createPlan(plan, null);
-        //when
-        planService.deletePlan(planId);
-        Optional<Plan> result = planService.getPlan(planId);
-        //then
-        Assertions.assertThat(result).isEmpty();
-    }
+        for (int i = 0; i < TOTAL_COUNT; i++){
+            int userId = i + 1;
+            executorService.submit(() ->  {
+                try {
+                    planService.likePlan(530,userId);
+                }
+                catch( Exception e){
+                    System.out.println(e);
+                } finally {
+                    latch.countDown();
 
-    @Test
-    void likeTest() {
-        //given
-        long like = 0;
-        Plan plan = new Plan(-1, 3, 1, true, 0, 0, "2024-08-20 10:00:00", "test", "test");
-        long planId = planService.createPlan(plan, null);
-        long userId = 3;
+                }
+            });
+        }
+        latch.await();
 
-        //when
-        String result1 = planService.likePlan(userId, planId);
-        String result2 = planService.likePlan(userId, planId);
-        Plan updatedPlan = planService.getPlan(planId).get();
-        long updatedLike = updatedPlan.getLikes();
-        //then
-        //좋아요 성공 여부 ,좋아요 중복 여부, 좋아요 + 1 되었는지 확인
-        Assertions.assertThat(result1).isEqualTo("like complete");
-        Assertions.assertThat(result1).isNotEqualTo(result2);
-        Assertions.assertThat(like + 1).isEqualTo(updatedLike);
+        TotalPlan plan = planRepository.findById(530).get();
+        hashOps = longRedisTemplate.opsForHash();
+        Integer after = hashOps.get("plan:likes", Long.toString(530));
+
+        Assertions.assertThat(plan.getLikes()).isNotEqualTo(after);
+        Assertions.assertThat(after).isEqualTo(before + TOTAL_COUNT);
+
     }
     @Test
-    void scrapTest() {
-        //given
-        long scrap = 0;
-        Plan plan = new Plan(-1, 3, 1, true, 0, 0, "2024-08-20 10:00:00", "test", "test");
-        long planId = planService.createPlan(plan, null);
-        long userId = 3;
-        long userId2 = 4;
-        //when1
-        String result1 = planService.scrapPlan(userId, planId);
-        String result2 = planService.scrapPlan(userId, planId);
-        String result3 = planService.scrapPlan(userId,-1);
-        Plan updatedPlan = planService.getPlan(planId).get();
-        long updatedScraps = updatedPlan.getScraps();
+    void planLikeParallelTest() throws InterruptedException {
 
-        //then1
-        Assertions.assertThat(result1).isEqualTo("scrap complete");
-        Assertions.assertThat(result1).isNotEqualTo(result2);
-        Assertions.assertThat(updatedScraps).isEqualTo(scrap+1);
-        Assertions.assertThat(result3).isEqualTo("no plan exists");
+        TotalPlan plan = planRepository.findById(50).get();
+        int before = plan.getLikes();
 
-        //when2
-        String deleteResult1 = planService.deleteScrap(userId, planId);
-        String deleteResult2 = planService.deleteScrap(userId, planId);
+        for (int i = 0; i < TOTAL_COUNT; i++){
+            int userId = i + 1;
+            executorService.submit(() ->  {
+                try {
+                    planService.likePlan(50,userId);
+                }
+                catch( Exception e){
+                    System.out.println(e);
+                } finally {
+                    latch.countDown();
 
-        //then2
-        Assertions.assertThat(deleteResult1).isEqualTo("delete complete");
-        Assertions.assertThat(deleteResult2).isEqualTo("error");
+                }
+            });
+        }
+        latch.await();
 
-        //when3
-        String ConcurrentResult1 = planService.scrapPlan(userId,planId);
-        int a = planService.getPlan(planId).get().getScraps();
-        String ConcurrentResult2 = planService.scrapPlan(userId2,planId);
-        int b = planService.getPlan(planId).get().getScraps();
-        //then3
+        plan = planRepository.findById(50).get();
+        int after = plan.getLikes();
 
-        Assertions.assertThat(a).isEqualTo(b-1);
+        Assertions.assertThat(after).isEqualTo(before + TOTAL_COUNT);
+
     }
-
-
-
- */
-
 }

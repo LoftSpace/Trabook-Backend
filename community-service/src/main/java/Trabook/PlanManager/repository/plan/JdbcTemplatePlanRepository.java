@@ -404,7 +404,7 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
     @Override
     public void updateLikes(long planId, int numOfLikes) {
         String sql = "UPDATE Plan " +
-                "SET likes = ? " +
+                "SET likes = likes + ? " +
                 "WHERE PlanId = ? ";
         jdbcTemplate.update(sql, numOfLikes, planId);
     }
