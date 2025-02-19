@@ -48,6 +48,7 @@ public interface PlanRepository {
     int upScrap(long planId);
     int downScrap(long planId);
     int increaseCommentCount(long planId);
+    int findLikesById(long planId);
 
     boolean isLiked(long planId,long userId);
     boolean isScrapped(long planId, long userId);

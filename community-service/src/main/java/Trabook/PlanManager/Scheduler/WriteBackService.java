@@ -10,12 +10,13 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class WriteBackScheduler {
+public class WriteBackService {
     private final PlanRepository planRepository;
     private final RedisTemplate<String, Long> longRedisTemplate;
     private final RedissonClient redissonClient;
@@ -30,7 +31,7 @@ public class WriteBackScheduler {
     //@Scheduled(fixedRate = 180000)
     public void writeBackUserLike() {
 
-        Set<Long> hottestPlanIds = hottestPlanService.getHottestPlanIds();
+        ArrayList<Long> hottestPlanIds = hottestPlanService.getHottestPlanIds();
         for(Long hottestPlanId : hottestPlanIds){
             RSet<String> users = redissonClient.getSet("plan:likes-user:" + hottestPlanId);
 

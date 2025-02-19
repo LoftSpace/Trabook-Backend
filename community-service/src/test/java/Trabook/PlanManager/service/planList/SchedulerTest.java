@@ -1,6 +1,6 @@
 package Trabook.PlanManager.service.planList;
 
-import Trabook.PlanManager.Scheduler.WriteBackScheduler;
+import Trabook.PlanManager.Scheduler.WriteBackService;
 import Trabook.PlanManager.domain.plan.TotalPlan;
 import Trabook.PlanManager.repository.plan.PlanRepository;
 import Trabook.PlanManager.service.HottestPlanService;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SchedulerTest {
     @Autowired
-    WriteBackScheduler writeBackScheduler;
+    WriteBackService writeBackService;
     @Autowired
     HottestPlanService hottestPlanService;
     @Autowired
@@ -37,7 +37,7 @@ public class SchedulerTest {
         int likeOfPlan1Before = plan1.getLikes();
         int likeOfPlan2Before = plan2.getLikes();
 
-        writeBackScheduler.writeBackLikeCounting();
+        writeBackService.writeBackLikeCounting();
 
         plan1 = planRepository.findById(580).get();
         plan2 = planRepository.findById(530).get();
@@ -50,7 +50,7 @@ public class SchedulerTest {
 
     @Test
     void writeBackLikesTest(){
-        writeBackScheduler.writeBackUserLike();
+        writeBackService.writeBackUserLike();
         Assertions.assertThat(planRepository.isLiked(580,3)).isTrue();
         Assertions.assertThat(planRepository.isLiked(580,4)).isTrue();
         Assertions.assertThat(planRepository.isLiked(530,3)).isTrue();

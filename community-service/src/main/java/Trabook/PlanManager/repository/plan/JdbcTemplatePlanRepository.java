@@ -376,6 +376,14 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
     }
 
     @Override
+    public int findLikesById(long planId) {
+        String sql = "SELECT likes " +
+                "FROM Plan " +
+                "WHERE planId = ?;";
+        return jdbcTemplate.queryForObject(sql,new Object[]{planId}, Integer.class);
+    }
+
+    @Override
     public long addComment(Comment comment) {
         String sql = "INSERT INTO PlanComment( userId,planId,content,parentId,refOrder,time)" +
                 "values(?,?,?,?,?,?)";

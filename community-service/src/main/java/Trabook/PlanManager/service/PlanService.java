@@ -375,7 +375,6 @@ public class PlanService {
 
     @Transactional
     public List<PlanListResponseDTO> getHottestPlan(Long userId) {
-
         List<PlanListResponseDTO> top10Plans = planListRepository.findHottestPlan();
         return top10Plans;
     }

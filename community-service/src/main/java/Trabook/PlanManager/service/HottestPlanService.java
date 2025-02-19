@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,7 +20,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class HottestPlanService {
     private final PlanListRepository planListRepository;
-    private final Set<Long> hottestPlanIds = new HashSet<>();
+    private final ArrayList<Long> hottestPlanIds = new ArrayList<>();
     private final RedissonClient redissonClient;
     private final RedisTemplate<String,Long> longRedisTemplate;
 
@@ -41,7 +42,7 @@ public class HottestPlanService {
     }
 
     // 인기 게시글 목록 가져오기
-    public Set<Long> getHottestPlanIds() {
+    public ArrayList<Long> getHottestPlanIds() {
         return hottestPlanIds;
     }
 

@@ -1,6 +1,7 @@
 package Trabook.PlanManager.service;
 
 
+import Trabook.PlanManager.Scheduler.UpdateHottestPlanScheduler;
 import Trabook.PlanManager.repository.plan.PlanListRepository;
 import Trabook.PlanManager.response.PlanListResponseDTO;
 import org.assertj.core.api.Assertions;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -18,17 +20,23 @@ public class HottestPlanServiceTest{
     HottestPlanService hottestPlanService;
     @Autowired
     PlanListRepository planListRepository;
+    @Autowired
+    UpdateHottestPlanScheduler updateHottestPlanScheduler;
+    @Autowired
+    PlanRedisService planRedisService;
 
     List<PlanListResponseDTO> hottestPlan;
+
     @BeforeEach
     void initHottestPlanList() {
-        List<PlanListResponseDTO> hottestPlan = planListRepository.findHottestPlan();
+        hottestPlan = planListRepository.findHottestPlan();
         hottestPlanService.updateHottestPlanIds();
     }
+
     @Test
     void checkHottestPlanListTest(){
 
-        Set<Long> hottestPlanIds = hottestPlanService.getHottestPlanIds();
+        ArrayList<Long> hottestPlanIds = hottestPlanService.getHottestPlanIds();
         for(PlanListResponseDTO planListResponseDTO : hottestPlan){
             Assertions.assertThat(hottestPlanIds.contains(planListResponseDTO.getPlanId()));
         }
@@ -40,4 +48,20 @@ public class HottestPlanServiceTest{
         Assertions.assertThat(hottestPlanService.isHottestPlan(normalPlanId)).isFalse();
     }
 
+    @Test
+    void updateHottestPlanToRedis(){
+        updateHottestPlanScheduler.updateHottestPlanToRedis();
+        List<PlanListResponseDTO> hottestPlanFromRedis = planRedisService.getHottestPlan();
+        ArrayList<Long> hottestPlanIds = hottestPlanService.getHottestPlanIds();
+        List<PlanListResponseDTO> hottestPlan1 = planListRepository.findHottestPlan();
+        for(PlanListResponseDTO plan : hottestPlan1){
+            System.out.println(plan.getPlanId() + "from db");
+        }
+        int i = 0;
+        for(Long planId : hottestPlanIds)
+            System.out.println(planId + "from hottestPlanService");
+        for(Long planId : hottestPlanIds){
+            Assertions.assertThat(hottestPlanFromRedis.get(i++).getPlanId()).isEqualTo(planId);
+        }
+    }
 }

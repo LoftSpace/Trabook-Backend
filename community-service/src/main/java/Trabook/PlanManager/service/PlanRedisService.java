@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.geo.Point;
 import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
@@ -39,9 +40,8 @@ public class PlanRedisService {
     public List<PlanListResponseDTO> getHottestPlan(){
         objectMapper.registerModule(new SimpleModule().addDeserializer(Point.class, new PointDeserializer()));
         objectMapper.registerModule(new JavaTimeModule());
-        HashOperations<String,String,String> hashOps = redisTemplate.opsForHash();
-        List<String> topPlans = hashOps.values("plans");
-
+        ListOperations<String, String> listOps = redisTemplate.opsForList();
+        List<String> topPlans = listOps.range("topPlans", 0, -1);
         List<PlanListResponseDTO> top10Plans = new ArrayList<>();
 
         try {
@@ -52,19 +52,7 @@ public class PlanRedisService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        /*
-        for(PlanListResponseDTO plan : top10Plans){
-            if(userId == null){
-                plan.setIsScrapped(false);
-                plan.setIsLiked(false);
-            } else {
-                plan.setIsLiked(planRepository.isLiked(plan.getPlanId(), userId));
-                plan.setIsScrapped(planRepository.isScrapped(plan.getPlanId(), userId));
-            }
-        }
 
-
-         */
         return top10Plans;
     }
 
