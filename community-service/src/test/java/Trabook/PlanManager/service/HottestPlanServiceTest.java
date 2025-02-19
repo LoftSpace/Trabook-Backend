@@ -52,16 +52,10 @@ public class HottestPlanServiceTest{
     void updateHottestPlanToRedis(){
         updateHottestPlanScheduler.updateHottestPlanToRedis();
         List<PlanListResponseDTO> hottestPlanFromRedis = planRedisService.getHottestPlan();
-        ArrayList<Long> hottestPlanIds = hottestPlanService.getHottestPlanIds();
-        List<PlanListResponseDTO> hottestPlan1 = planListRepository.findHottestPlan();
-        for(PlanListResponseDTO plan : hottestPlan1){
-            System.out.println(plan.getPlanId() + "from db");
-        }
-        int i = 0;
-        for(Long planId : hottestPlanIds)
-            System.out.println(planId + "from hottestPlanService");
-        for(Long planId : hottestPlanIds){
-            Assertions.assertThat(hottestPlanFromRedis.get(i++).getPlanId()).isEqualTo(planId);
+        List<PlanListResponseDTO> hottestPlanFromDB = planListRepository.findHottestPlan();
+
+        for(int i = 0; i < hottestPlanFromRedis.size(); i++){
+            Assertions.assertThat(hottestPlanFromRedis.get(i).equals(hottestPlanFromDB.get(i))).isTrue();
         }
     }
 }
