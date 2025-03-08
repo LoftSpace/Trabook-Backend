@@ -20,5 +20,6 @@ DevOps : MySQL, Redis, GCP
    
 
 # ERD
+![image (1)](https://github.com/user-attachments/assets/a0ece41a-edc8-49b1-bfa1-fec7def210c5)
 
 
