@@ -9,9 +9,7 @@ Backend : Java17, Spring Boot
 DevOps : MySQL, Redis, GCP
 
 # 인프라 아키텍처
-<img width="847" alt="스크린샷 2025-03-08 오후 6 14 57" src="https://github.com/user-attachments/assets/e4f281a0-b6a4-43c1-9645-9599f69ec307" width="300" height="300"/>
-
-
+<img width="765" alt="스크린샷 2025-03-08 오후 6 18 06" src="https://github.com/user-attachments/assets/839e081f-1dcd-49cf-850a-1a99ec675b3d" width="300" height="300" />
 
 # 문제 해결 및 성능 개선
 1. 인기 게시글 목록을 위한 개선
