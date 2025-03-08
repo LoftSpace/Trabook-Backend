@@ -4,7 +4,8 @@
 사용자는 다른사람의 여행계획에 좋아요,스크랩,댓글 기능을 수행할 수 있다.
 
 # 기술 스택
-Java17, Sprinb Boot, MySQL, Redis
+Backend : Java17, Spring Boot 
+DevOps : MySQL, Redis, GCP
 
 # 인프라 아키텍처
 <img width="867" alt="image" src="https://github.com/user-attachments/assets/3ff98c88-6d30-46c1-a538-24121842b566" />
