@@ -7,6 +7,7 @@
 Java17, Sprinb Boot, MySQL, Redis
 
 # 인프라 아키텍처
+<img width="867" alt="image" src="https://github.com/user-attachments/assets/3ff98c88-6d30-46c1-a538-24121842b566" />
 
 # 문제 해결 및 성능 개선
 1. 인기 게시글 목록을 위한 개선
