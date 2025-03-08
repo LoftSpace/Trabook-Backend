@@ -11,6 +11,14 @@ DevOps : MySQL, Redis, GCP
 # 인프라 아키텍처
 <img width="765" alt="스크린샷 2025-03-08 오후 6 18 06" src="https://github.com/user-attachments/assets/839e081f-1dcd-49cf-850a-1a99ec675b3d" width="300" height="300" />
 
+# 역할
+- 백엔드 아키텍처 설계
+- ERD 설계
+- RESTful API 개발, 기술 스택 : Java, Spring, MySQL, Redis, JDBC Template
+    - 게시글, 댓글 crud구현
+    - 인기 게시글 및 여행지 랭킹 목록 구현
+    - 여행지 불러오기 api 구현
+
 # 문제 해결 및 성능 개선
 https://github.com/LoftSpace/Trabook-Backend/wiki
 1. 인기 게시글 목록을 위한 개선
