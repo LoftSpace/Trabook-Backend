@@ -213,6 +213,7 @@ public class PlanService {
         return comment;
 
     }
+
     public PlanResponseDTO handleTotalPlanRequest(long planId,Long userId){
         PlanResponseDTO totalPlan = planRepository.findTotalPlan(planId);
         if(totalPlan == null) {
@@ -342,10 +343,9 @@ public class PlanService {
 
     @Transactional
     public void likePlan(long planId, long userId) throws Exception {
-        if(hottestPlanService.isHottestPlan(planId)) {
-                    System.out.println("hot");
+        if(hottestPlanService.isHottestPlan(planId))
                   hottestPlanService.likePlan(planId,userId);
-        }
+
         else {
 
             RLock lock = redissonClient.getLock("plan:likes:" + Long.toString(planId));
