@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 
@@ -29,12 +30,13 @@ public class UpdateHottestPlanScheduler {
     private final WriteBackService writeBackService;
 
 
-    //@Scheduled()
+    @Scheduled(cron = "0 * * * * *")
     public void updateHottestPlan(){
-        hottestPlanService.updateHottestPlanIds();
+        hottestPlanService.updateHottestPlanIdsToLocal();
         updateHottestPlanToRedis();
         writeBackService.writeBackLikeCounting();
-        writeBackService.writeBackLikeCounting();
+        writeBackService.writeBackUserLike();
+
     }
 
     public void updateHottestPlanToRedis() {

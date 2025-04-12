@@ -99,6 +99,13 @@ public class PlanListController {
     }
 
 
+    @ResponseBody
+    @GetMapping("/popular-test")
+    public  List<PlanListResponseDTO> getHottestPlanTest(@RequestHeader(value = "userId", required = false) Long userId) {
+        System.out.println("popular");
+        List<PlanListResponseDTO> hottestPlan = planService.getHottestPlan(userId);
+        return hottestPlan;
+    }
 
 
 

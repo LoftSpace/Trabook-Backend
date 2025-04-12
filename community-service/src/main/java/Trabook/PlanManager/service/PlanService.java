@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -214,12 +215,15 @@ public class PlanService {
     }
     public PlanResponseDTO handleTotalPlanRequest(long planId,Long userId){
         PlanResponseDTO totalPlan = planRepository.findTotalPlan(planId);
+        if(totalPlan == null) {
+            throw new IllegalArgumentException(String.format("해당 계획 없음"));
+        }
         TotalPlan plan = totalPlan.getTotalPlan();
         List<Place> placeList = destinationRepository.findPlaceListByPlanId(planId);
         // get vs set ???
-        setPlanOwner(plan.getUserId(),totalPlan);
-        setCommentsWithUsers(planId, totalPlan);
-        setDetailPlaceInfo(plan,placeList);
+        //setPlanOwner(plan.getUserId(),totalPlan);
+        //setCommentsWithUsers(planId, totalPlan);
+        //setDetailPlaceInfo(plan,placeList);
 
         totalPlan.isLiked(isPlanLiked(planId, userId));
         totalPlan.isScrapped(isPlanScrapped(planId,userId));
@@ -339,27 +343,31 @@ public class PlanService {
     @Transactional
     public void likePlan(long planId, long userId) throws Exception {
         if(hottestPlanService.isHottestPlan(planId)) {
+                    System.out.println("hot");
                   hottestPlanService.likePlan(planId,userId);
         }
         else {
+
             RLock lock = redissonClient.getLock("plan:likes:" + Long.toString(planId));
             planRepository.findById(planId)
                     .orElseThrow(()-> new IllegalArgumentException("일치하는 계획 게시글 없음"));
 
+
             try {
                 if (!lock.tryLock(5L, 3L, TimeUnit.SECONDS))
                     throw new RuntimeException("락 획득 실패");
-
                 planRepository.likePlan(userId,planId);
                 planRepository.upLike(planId);
 
             } catch (Exception e) {
-                throw new Exception("디비 연산중 오류");
+                throw e;
             } finally {
                 if (lock != null && lock.isLocked())
                     lock.unlock();
 
             }
+
+
         }
 
     }

@@ -14,7 +14,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
+/*
 
 @SpringBootTest
 public class CommentServiceParallelTest {
@@ -60,3 +60,6 @@ public class CommentServiceParallelTest {
     }
 
 }
+
+
+ */

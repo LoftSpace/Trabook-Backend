@@ -1,6 +1,6 @@
 package Trabook.PlanManager.service;
 
-import Trabook.PlanManager.domain.destination.Place;
+
 import Trabook.PlanManager.domain.plan.HottestPlanContentsInRedis;
 import Trabook.PlanManager.repository.plan.PlanRepository;
 import Trabook.PlanManager.response.PlanListResponseDTO;
@@ -18,9 +18,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class PlanRedisService {
@@ -46,7 +44,7 @@ public class PlanRedisService {
 
         try {
             for (String jsonPlan : topPlans) {
-                 PlanListResponseDTO plan = objectMapper.readValue(jsonPlan, PlanListResponseDTO.class);
+                PlanListResponseDTO plan = objectMapper.readValue(jsonPlan, PlanListResponseDTO.class);
                 top10Plans.add(plan);
             }
         } catch (Exception e) {

@@ -34,8 +34,8 @@ public class AdminController {
     }
 
 
-
-
+/*
+    //redis에 업데이트
     @Scheduled(cron = "0 * * * * *")
     //@Scheduled(cron = "0 0 0/1 * * *")
     @ResponseBody
@@ -66,7 +66,7 @@ public class AdminController {
 
 
 
-/*
+
     //상위 5개 여행지 가져오고 레디스 서버에 업데이트
     //@Scheduled(cron = "0 0 0/1 * * * ")
     //@ResponseBody

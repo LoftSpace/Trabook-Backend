@@ -165,7 +165,8 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
 
     @Override
     public PlanResponseDTO findTotalPlan(long planId) {
-        String sql = "select p.*, dp.*, s.* " +
+        String sql = "/*+ HASH_JOIN(dp) HASH_JOIN(s) */" +
+                "select p.*, dp.*, s.* " +
                 "from Plan p " +
                 "inner join DayPlan dp on p.planId = dp.planId " +
                 "inner join `Schedule` s on dp.planId = s.planId and dp.day = s.day " +
@@ -356,8 +357,8 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
     @Override
     public void likePlan(long userId,long planId) {
         String sql = "INSERT INTO LikedPlan(userId,planId) " +
-                "values(?,?)";
-        jdbcTemplate.update(sql,userId,planId);
+                "values(?,?);";
+        int update = jdbcTemplate.update(sql, userId, planId);
 
     }
 
@@ -468,6 +469,7 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
             }
         };
     }
+
     private RowMapper<DayPlan> dayPlanRowMapper() {
         return new RowMapper<DayPlan>() {
             @Override
@@ -475,8 +477,8 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
                 DayPlan dayPlan = new DayPlan();
                 dayPlan.setDay(rs.getInt("day"));
                 dayPlan.setPlanId(rs.getLong("planId"));
-                dayPlan.setStartTime(rs.getTime("startTime").toLocalTime());
-                dayPlan.setEndTime(rs.getTime("endTime").toLocalTime());
+                dayPlan.setStartTime(rs.getString("startTime"));
+                dayPlan.setEndTime(rs.getString("endTime"));
                 return dayPlan;
             }
         };

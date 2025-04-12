@@ -74,9 +74,11 @@ public class PlanController {
     @ResponseBody
     @GetMapping("")
     public ResponseEntity<?> getPlanByPlanId(@RequestParam("planId")Long planId, @RequestHeader(value = "userId", required = false) Long userId) throws InterruptedException {
+        //System.out.println("ok");
         if(planId == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("planId 없음");
         }
+
         PlanResponseDTO planResponseDTO = planService.handleTotalPlanRequest(planId, userId);
         return ResponseEntity.ok(planResponseDTO);
     }
@@ -86,9 +88,11 @@ public class PlanController {
     @PostMapping("/like")
     public ResponseEntity<?> likePlan(@RequestBody PlanActionRequestDto planActionRequestDto, @RequestHeader("userId") Long userId) {
         try {
+            //System.out.println("like");
             planService.likePlan(planActionRequestDto.getPlanId(), userId);
             return ResponseEntity.ok("좋아요 성공");
         } catch (Exception e) {
+            //System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

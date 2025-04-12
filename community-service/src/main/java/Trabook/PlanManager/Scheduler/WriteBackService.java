@@ -2,6 +2,7 @@ package Trabook.PlanManager.Scheduler;
 
 import Trabook.PlanManager.repository.plan.PlanRepository;
 import Trabook.PlanManager.service.HottestPlanService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RSet;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -24,7 +25,7 @@ public class WriteBackService {
 
     //@Scheduled(fixedRate = 180000)
     public void writeBackLikeCounting() {
-        Map<String,Integer> likesMap = getPlanLikesCountingMap();
+        Map<String,Integer> likesMap = hottestPlanService.getPlanHottestLikesCountingMap();
         updateLikes(likesMap);
     }
 
@@ -32,9 +33,10 @@ public class WriteBackService {
     public void writeBackUserLike() {
 
         ArrayList<Long> hottestPlanIds = hottestPlanService.getHottestPlanIds();
+        //pipelining?
+       
         for(Long hottestPlanId : hottestPlanIds){
             RSet<String> users = redissonClient.getSet("plan:likes-user:" + hottestPlanId);
-
             for(String userId : users){
                 planRepository.likePlan(Long.parseLong(userId),hottestPlanId);
             }
@@ -51,9 +53,6 @@ public class WriteBackService {
         }
     }
 
-    private Map<String,Integer> getPlanLikesCountingMap() {
-        HashOperations<String, String,Integer> hashOps = longRedisTemplate.opsForHash();
-        return hashOps.entries("plan:likes");
-    }
+
 
 }

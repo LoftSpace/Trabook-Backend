@@ -6,14 +6,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -25,11 +23,12 @@ public class HottestPlanService {
     private final RedisTemplate<String,Long> longRedisTemplate;
 
     @Scheduled(cron = "0 * * * * *")
-    public void updateHottestPlanIds() {
+    public void updateHottestPlanIdsToLocal() {
         List<PlanListResponseDTO> hottestPlan = planListRepository.findHottestPlan();
         for(PlanListResponseDTO planListResponseDTO : hottestPlan){
             hottestPlanIds.add(planListResponseDTO.getPlanId());
         }
+
         log.info("{} complete","인기게시글 업데이트 완료");
 
     }
@@ -42,11 +41,17 @@ public class HottestPlanService {
     }
 
     // 인기 게시글 목록 가져오기
-    public ArrayList<Long> getHottestPlanIds() {
+    public ArrayList<Long> getHottestPlanIds()
+    {
         return hottestPlanIds;
     }
 
     public boolean isHottestPlan(Long planId){
         return hottestPlanIds.contains(planId);
+    }
+
+    public Map<String,Integer> getPlanHottestLikesCountingMap() {
+        HashOperations<String, String,Integer> hashOps = longRedisTemplate.opsForHash();
+        return hashOps.entries("plan:likes");
     }
 }

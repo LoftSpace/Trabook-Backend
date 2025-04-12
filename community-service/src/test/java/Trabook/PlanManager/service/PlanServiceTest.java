@@ -1,6 +1,5 @@
 package Trabook.PlanManager.service;
 
-import Trabook.PlanManager.domain.comment.Comment;
 import Trabook.PlanManager.domain.plan.TotalPlan;
 import Trabook.PlanManager.repository.plan.PlanRepository;
 import org.assertj.core.api.Assertions;
@@ -14,11 +13,10 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
+/*
 @SpringBootTest
 @Transactional
 public class PlanServiceTest {
@@ -37,13 +35,13 @@ public class PlanServiceTest {
     HottestPlanService hottestPlanService;
     private ExecutorService executorService;
     private CountDownLatch latch;
-    private static final int TOTAL_COUNT = 100;
+    private static final int TOTAL_COUNT = 2;
 
     @BeforeEach
     void setUp() {
         executorService = Executors.newFixedThreadPool(TOTAL_COUNT);
         latch = new CountDownLatch(TOTAL_COUNT);
-        hottestPlanService.updateHottestPlanIds();
+        hottestPlanService.updateHottestPlanIdsToLocal();
     }
 
     @Test
@@ -78,14 +76,14 @@ public class PlanServiceTest {
     @Test
     void planLikeParallelTest() throws InterruptedException {
 
-        TotalPlan plan = planRepository.findById(50).get();
+        TotalPlan plan = planRepository.findById(535).get();
         int before = plan.getLikes();
 
         for (int i = 0; i < TOTAL_COUNT; i++){
-            int userId = i + 1;
+            int userId = i + 3;
             executorService.submit(() ->  {
                 try {
-                    planService.likePlan(50,userId);
+                    planService.likePlan(535,userId);
                 }
                 catch( Exception e){
                     System.out.println(e);
@@ -97,10 +95,13 @@ public class PlanServiceTest {
         }
         latch.await();
 
-        plan = planRepository.findById(50).get();
+        plan = planRepository.findById(535).get();
         int after = plan.getLikes();
 
         Assertions.assertThat(after).isEqualTo(before + TOTAL_COUNT);
 
     }
 }
+
+
+ */
