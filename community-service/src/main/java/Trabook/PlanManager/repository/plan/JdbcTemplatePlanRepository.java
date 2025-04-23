@@ -47,6 +47,9 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
 
     }
 
+
+
+
     @Override
     public Optional<DayPlan.Schedule> findSchedule(long planId, int day, int order) {
         String sql = "SELECT * FROM Schedule WHERE planId = ? AND `day` = ? AND `order` = ?";
@@ -165,7 +168,7 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
 
     @Override
     public PlanResponseDTO findTotalPlan(long planId) {
-        String sql = "/*+ HASH_JOIN(dp) HASH_JOIN(s) */" +
+        String sql =
                 "select p.*, dp.*, s.* " +
                 "from Plan p " +
                 "inner join DayPlan dp on p.planId = dp.planId " +

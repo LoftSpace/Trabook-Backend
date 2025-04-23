@@ -4,8 +4,10 @@ import Trabook.PlanManager.repository.plan.PlanListRepository;
 import Trabook.PlanManager.response.PlanListResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RMap;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
+import org.redisson.api.map.MapWriter;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -21,6 +23,7 @@ public class HottestPlanService {
     private final ArrayList<Long> hottestPlanIds = new ArrayList<>();
     private final RedissonClient redissonClient;
     private final RedisTemplate<String,Long> longRedisTemplate;
+    private final RMap<String,Long> userPlanLikesMap;
 
     @Scheduled(cron = "0 * * * * *")
     public void updateHottestPlanIdsToLocal() {
@@ -34,8 +37,14 @@ public class HottestPlanService {
     }
 
     public void likePlan(long planId,long userId){
-        if(redissonClient.getSet("plan:likes-user:" + planId).add(Long.toString(userId)))
-            redissonClient.getMap("plan:likes").addAndGet(planId,1);
+        //if(redissonClient.getSet("plan:likes-user:" + planId).add(Long.toString(userId)))
+        String key = userId + ":" + planId;
+        if(userPlanLikesMap.fastPutIfAbsent(key,userId)) {
+            System.out.println("레디스에 저장 완료 및 write back대기큐에 삽입 완료");
+            redissonClient.getMap("plan:likes").addAndGet(planId, 1);
+        }
+            //planLikeCountsMap.addAndGet(planId,1);
+
     }
 
     // 인기 게시글 목록 가져오기

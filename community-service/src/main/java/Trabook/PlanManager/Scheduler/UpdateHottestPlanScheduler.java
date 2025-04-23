@@ -27,15 +27,13 @@ public class UpdateHottestPlanScheduler {
     private final RedisTemplate<String, String> redisTemplate;
     private final PlanService planService;
     private final HottestPlanService hottestPlanService;
-    private final WriteBackService writeBackService;
+    //private final WriteBackService writeBackService;
 
 
     @Scheduled(cron = "0 * * * * *")
     public void updateHottestPlan(){
         hottestPlanService.updateHottestPlanIdsToLocal();
         updateHottestPlanToRedis();
-        writeBackService.writeBackLikeCounting();
-        writeBackService.writeBackUserLike();
 
     }
 

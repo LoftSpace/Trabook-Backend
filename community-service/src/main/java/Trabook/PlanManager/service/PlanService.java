@@ -60,6 +60,8 @@ public class PlanService {
         return fileUploadService.uploadDefaultImage(createdPlanId);
     }
 
+
+
     @Transactional
     public long updatePlan(TotalPlan totalPlan) {
         long planId = totalPlan.getPlanId();
@@ -214,7 +216,7 @@ public class PlanService {
 
     }
 
-    public PlanResponseDTO handleTotalPlanRequest(long planId,Long userId){
+    public PlanResponseDTO handleTotalPlanRequest(long planId,Long userId) throws InterruptedException {
         PlanResponseDTO totalPlan = planRepository.findTotalPlan(planId);
         if(totalPlan == null) {
             throw new IllegalArgumentException(String.format("해당 계획 없음"));
@@ -225,6 +227,7 @@ public class PlanService {
         //setPlanOwner(plan.getUserId(),totalPlan);
         //setCommentsWithUsers(planId, totalPlan);
         //setDetailPlaceInfo(plan,placeList);
+        Thread.sleep(20); // 1밀리초 sleep
 
         totalPlan.isLiked(isPlanLiked(planId, userId));
         totalPlan.isScrapped(isPlanScrapped(planId,userId));
@@ -343,11 +346,13 @@ public class PlanService {
 
     @Transactional
     public void likePlan(long planId, long userId) throws Exception {
-        if(hottestPlanService.isHottestPlan(planId))
-                  hottestPlanService.likePlan(planId,userId);
+        if(hottestPlanService.isHottestPlan(planId)) {
+            log.info("인기 목록 게시글 좋아요");
+            hottestPlanService.likePlan(planId, userId);
+        }
 
         else {
-
+            log.info("인기목록 아님");
             RLock lock = redissonClient.getLock("plan:likes:" + Long.toString(planId));
             planRepository.findById(planId)
                     .orElseThrow(()-> new IllegalArgumentException("일치하는 계획 게시글 없음"));
