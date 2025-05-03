@@ -1,6 +1,7 @@
 package Trabook.PlanManager.service;
 
 import Trabook.PlanManager.repository.plan.PlanListRepository;
+import Trabook.PlanManager.repository.plan.PlanRepository;
 import Trabook.PlanManager.response.PlanListResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class HottestPlanService {
     private final PlanListRepository planListRepository;
+    private final PlanRepository planRepository;
     private final ArrayList<Long> hottestPlanIds = new ArrayList<>();
     private final RedissonClient redissonClient;
     private final RedisTemplate<String,Long> longRedisTemplate;
@@ -32,18 +34,13 @@ public class HottestPlanService {
             hottestPlanIds.add(planListResponseDTO.getPlanId());
         }
 
-        log.info("{} complete","인기게시글 업데이트 완료");
-
+        log.info("{} complete","인기게시글 업데이트");
     }
 
     public void likePlan(long planId,long userId){
-        //if(redissonClient.getSet("plan:likes-user:" + planId).add(Long.toString(userId)))
         String key = userId + ":" + planId;
-        if(userPlanLikesMap.fastPutIfAbsent(key,userId)) {
-            System.out.println("레디스에 저장 완료 및 write back대기큐에 삽입 완료");
+        if(userPlanLikesMap.fastPutIfAbsent(key,userId) || !planRepository.isLiked(planId,userId))
             redissonClient.getMap("plan:likes").addAndGet(planId, 1);
-        }
-            //planLikeCountsMap.addAndGet(planId,1);
 
     }
 

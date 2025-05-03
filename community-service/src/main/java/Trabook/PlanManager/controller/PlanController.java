@@ -80,7 +80,6 @@ public class PlanController {
         if(planId == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("planId 없음");
         }
-        System.out.println("ok");
         PlanResponseDTO planResponseDTO = planService.handleTotalPlanRequest(planId, userId);
         return ResponseEntity.ok(planResponseDTO);
     }

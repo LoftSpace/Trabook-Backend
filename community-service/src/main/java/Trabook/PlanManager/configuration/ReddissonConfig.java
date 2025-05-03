@@ -53,7 +53,7 @@ public class ReddissonConfig {
             @Override
             public void write(Map<String, Long> map) {
                 for (Map.Entry<String, Long> e : map.entrySet()) {
-                    String compositeKey = e.getKey();      // e.g. "42:100"
+                    String compositeKey = e.getKey();
                     String[] parts = compositeKey.split(":");
                     Long userId = Long.valueOf(parts[0]);
                     Long planId = Long.valueOf(parts[1]);

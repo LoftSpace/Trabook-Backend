@@ -353,11 +353,10 @@ public class PlanService {
 
         else {
             log.info("인기목록 아님");
-            RLock lock = redissonClient.getLock("plan:likes:" + Long.toString(planId));
             planRepository.findById(planId)
                     .orElseThrow(()-> new IllegalArgumentException("일치하는 계획 게시글 없음"));
 
-
+            RLock lock = redissonClient.getLock("plan:likes:" + Long.toString(planId));
             try {
                 if (!lock.tryLock(5L, 3L, TimeUnit.SECONDS))
                     throw new RuntimeException("락 획득 실패");
@@ -369,12 +368,8 @@ public class PlanService {
             } finally {
                 if (lock != null && lock.isLocked())
                     lock.unlock();
-
             }
-
-
         }
-
     }
 
     @Transactional

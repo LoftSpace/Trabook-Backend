@@ -16,9 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-/*
+
 @SpringBootTest
-@Transactional
+
 public class PlanServiceTest {
 
     @Autowired
@@ -47,13 +47,13 @@ public class PlanServiceTest {
     @Test
     void hottestPlanLikeParallelTest() throws InterruptedException {
         HashOperations<String, String,Integer> hashOps = longRedisTemplate.opsForHash();
-        Integer before = hashOps.get("plan:likes", Long.toString(530));
+        Integer before = hashOps.get("plan:likes", Long.toString(100));
 
         for (int i = 0; i < TOTAL_COUNT; i++){
             int userId = i + 1;
             executorService.submit(() ->  {
                 try {
-                    planService.likePlan(530,userId);
+                    planService.likePlan(100,userId);
                 }
                 catch( Exception e){
                     System.out.println(e);
@@ -65,25 +65,26 @@ public class PlanServiceTest {
         }
         latch.await();
 
-        TotalPlan plan = planRepository.findById(530).get();
+        TotalPlan plan = planRepository.findById(100).get();
         hashOps = longRedisTemplate.opsForHash();
-        Integer after = hashOps.get("plan:likes", Long.toString(530));
+        Integer after = hashOps.get("plan:likes", Long.toString(100));
 
         Assertions.assertThat(plan.getLikes()).isNotEqualTo(after);
         Assertions.assertThat(after).isEqualTo(before + TOTAL_COUNT);
 
     }
+
     @Test
     void planLikeParallelTest() throws InterruptedException {
 
-        TotalPlan plan = planRepository.findById(535).get();
+        TotalPlan plan = planRepository.findById(100).get();
         int before = plan.getLikes();
 
         for (int i = 0; i < TOTAL_COUNT; i++){
             int userId = i + 3;
             executorService.submit(() ->  {
                 try {
-                    planService.likePlan(535,userId);
+                    planService.likePlan(100,userId);
                 }
                 catch( Exception e){
                     System.out.println(e);
@@ -95,8 +96,8 @@ public class PlanServiceTest {
         }
         latch.await();
 
-        plan = planRepository.findById(535).get();
-        int after = plan.getLikes();
+
+        int after = planRepository.findLikesById(100);
 
         Assertions.assertThat(after).isEqualTo(before + TOTAL_COUNT);
 
@@ -104,4 +105,4 @@ public class PlanServiceTest {
 }
 
 
- */
+
