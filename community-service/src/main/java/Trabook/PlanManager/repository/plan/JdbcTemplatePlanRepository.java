@@ -360,7 +360,7 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
     @Override
     public void likePlan(long userId,long planId) {
         String sql = "INSERT INTO LikedPlan(userId,planId) " +
-                "values(?,?);";
+                "values(?,";
         int update = jdbcTemplate.update(sql, userId, planId);
 
     }

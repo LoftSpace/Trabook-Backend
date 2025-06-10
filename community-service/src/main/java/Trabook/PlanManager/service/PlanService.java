@@ -31,6 +31,7 @@ import org.springframework.data.geo.Point;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,19 +67,16 @@ public class PlanService {
     public long updatePlan(TotalPlan totalPlan) {
         long planId = totalPlan.getPlanId();
 
-        if(planRepository.findById(planId).isEmpty()) {
+        if(planRepository.findById(planId).isEmpty())
             return 0;
-        }
 
-        if(isPlanExistInRanking(planId)) {
-            System.out.println("plan exists in ranking");
-            //write through
+        if(isPlanExistInRanking(planId))
             modifyPlanInRanking(totalPlan);
-        }
 
         planId = updatePlanToDB(totalPlan);
         return planId;
     }
+
 
     private long updatePlanToDB(TotalPlan totalPlan) {
         long planId;
@@ -344,33 +342,35 @@ public class PlanService {
             planRepository.deleteComment(commentId);
     }
 
-    @Transactional
+
     public void likePlan(long planId, long userId) throws Exception {
-        if(hottestPlanService.isHottestPlan(planId)) {
-            log.info("인기 목록 게시글 좋아요");
+        if(hottestPlanService.isHottestPlan(planId))
             hottestPlanService.likePlan(planId, userId);
-        }
+        else
+            likeNormalPlan(planId, userId);
+    }
 
-        else {
-            log.info("인기목록 아님");
-            planRepository.findById(planId)
-                    .orElseThrow(()-> new IllegalArgumentException("일치하는 계획 게시글 없음"));
+    @Transactional
+    private void likeNormalPlan(long planId, long userId) throws InterruptedException {
+        log.info("인기목록 아님");
+        planRepository.findById(planId)
+                .orElseThrow(()-> new IllegalArgumentException("일치하는 계획 게시글 없음"));
 
-            RLock lock = redissonClient.getLock("plan:likes:" + Long.toString(planId));
-            try {
-                if (!lock.tryLock(5L, 3L, TimeUnit.SECONDS))
-                    throw new RuntimeException("락 획득 실패");
-                planRepository.likePlan(userId,planId);
-                planRepository.upLike(planId);
+        RLock lock = redissonClient.getLock("plan:likes:" + Long.toString(planId));
+        try {
+            if (!lock.tryLock(5L, 3L, TimeUnit.SECONDS))
+                throw new RuntimeException("락 획득 실패");
+            planRepository.likePlan(userId, planId);
+            planRepository.upLike(planId);
 
-            } catch (Exception e) {
-                throw e;
-            } finally {
-                if (lock != null && lock.isLocked())
-                    lock.unlock();
-            }
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (lock != null && lock.isLocked())
+                lock.unlock();
         }
     }
+
 
     @Transactional
     public void scrapPlan(long planId, long userId) {
