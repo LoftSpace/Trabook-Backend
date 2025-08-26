@@ -47,6 +47,9 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
 
     }
 
+
+
+
     @Override
     public Optional<DayPlan.Schedule> findSchedule(long planId, int day, int order) {
         String sql = "SELECT * FROM Schedule WHERE planId = ? AND `day` = ? AND `order` = ?";
@@ -165,7 +168,8 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
 
     @Override
     public PlanResponseDTO findTotalPlan(long planId) {
-        String sql = "select p.*, dp.*, s.* " +
+        String sql =
+                "select p.*, dp.*, s.* " +
                 "from Plan p " +
                 "inner join DayPlan dp on p.planId = dp.planId " +
                 "inner join `Schedule` s on dp.planId = s.planId and dp.day = s.day " +
@@ -356,8 +360,8 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
     @Override
     public void likePlan(long userId,long planId) {
         String sql = "INSERT INTO LikedPlan(userId,planId) " +
-                "values(?,?)";
-        jdbcTemplate.update(sql,userId,planId);
+                "values(?,";
+        int update = jdbcTemplate.update(sql, userId, planId);
 
     }
 
@@ -373,6 +377,14 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
     public int increaseCommentCount(long planId) {
         String sql = "UPDATE Plan SET numOfComment = numOfComment + 1 WHERE planId = ?";
         return jdbcTemplate.update(sql,planId);
+    }
+
+    @Override
+    public int findLikesById(long planId) {
+        String sql = "SELECT likes " +
+                "FROM Plan " +
+                "WHERE planId = ?;";
+        return jdbcTemplate.queryForObject(sql,new Object[]{planId}, Integer.class);
     }
 
     @Override
@@ -404,7 +416,7 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
     @Override
     public void updateLikes(long planId, int numOfLikes) {
         String sql = "UPDATE Plan " +
-                "SET likes = ? " +
+                "SET likes = likes + ? " +
                 "WHERE PlanId = ? ";
         jdbcTemplate.update(sql, numOfLikes, planId);
     }
@@ -460,6 +472,7 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
             }
         };
     }
+
     private RowMapper<DayPlan> dayPlanRowMapper() {
         return new RowMapper<DayPlan>() {
             @Override
@@ -467,8 +480,8 @@ public class JdbcTemplatePlanRepository implements PlanRepository{
                 DayPlan dayPlan = new DayPlan();
                 dayPlan.setDay(rs.getInt("day"));
                 dayPlan.setPlanId(rs.getLong("planId"));
-                dayPlan.setStartTime(rs.getTime("startTime").toLocalTime());
-                dayPlan.setEndTime(rs.getTime("endTime").toLocalTime());
+                dayPlan.setStartTime(rs.getString("startTime"));
+                dayPlan.setEndTime(rs.getString("endTime"));
                 return dayPlan;
             }
         };

@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 @Slf4j
@@ -72,8 +74,9 @@ public class PlanController {
     }
 
     @ResponseBody
-    @GetMapping("")
-    public ResponseEntity<?> getPlanByPlanId(@RequestParam("planId")Long planId, @RequestHeader(value = "userId", required = false) Long userId) throws InterruptedException {
+    @GetMapping("/{planId}")
+    public ResponseEntity<?> getPlanByPlanId(@PathVariable("planId")Long planId, @RequestHeader(value = "userId", required = false) Long userId) throws InterruptedException {
+        //System.out.println("ok");
         if(planId == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("planId 없음");
         }
@@ -81,14 +84,16 @@ public class PlanController {
         return ResponseEntity.ok(planResponseDTO);
     }
 
-
+    
     @ResponseBody
     @PostMapping("/like")
     public ResponseEntity<?> likePlan(@RequestBody PlanActionRequestDto planActionRequestDto, @RequestHeader("userId") Long userId) {
         try {
+            //System.out.println("like");
             planService.likePlan(planActionRequestDto.getPlanId(), userId);
             return ResponseEntity.ok("좋아요 성공");
         } catch (Exception e) {
+            //System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -108,8 +113,8 @@ public class PlanController {
 
 
     @ResponseBody
-    @DeleteMapping("")
-    public ResponseEntity<?> deletePlan(@RequestParam("planId") long planId,@RequestHeader("userId") Long userId) {
+    @DeleteMapping("{planId}")
+    public ResponseEntity<?> deletePlan(@PathVariable Long planId,@RequestHeader("userId") Long userId) {
         if(userId == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인 필요");
         try {
@@ -123,16 +128,16 @@ public class PlanController {
     }
 
     @ResponseBody
-    @DeleteMapping("/like")
-    public ResponseEntity<ResponseMessage> deleteLike(@RequestHeader("userId") long userId, @RequestParam("planId") long planId){
+    @DeleteMapping("/{planId}/like")
+    public ResponseEntity<ResponseMessage> deleteLike(@RequestHeader("userId") long userId, @PathVariable Long planId){
         String message = planService.deleteLike(userId, planId);
         return ResponseEntity.ok(new ResponseMessage(message));
 
     }
 
     @ResponseBody
-    @DeleteMapping("/scrap")
-    public ResponseEntity<ResponseMessage> deleteScrap(@RequestHeader("userId") long userId, @RequestParam("planId") long planId) {
+    @DeleteMapping("/{planId}/scrap")
+    public ResponseEntity<ResponseMessage> deleteScrap(@RequestHeader("userId") long userId, @PathVariable Long planId) {
         String message = planService.deleteScrap(userId, planId);
         return ResponseEntity.ok(new ResponseMessage(message));
     }

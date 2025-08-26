@@ -42,6 +42,7 @@ public class SpringConfig {
     public PlanRepository planRepository() {
         return new JdbcTemplatePlanRepository(dataSource);
     }
+
     @Bean
     public PlanListRepository planListRepository() {
         return new JdbcTemplatePlanListRepository(dataSource);

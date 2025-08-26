@@ -22,15 +22,23 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RSet;
+import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.geo.Point;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -41,9 +49,11 @@ public class PlanService {
     private final DestinationRepository destinationRepository;
     private final PlanListRepository planListRepository;
     private final RedisTemplate<String, String> redisTemplate;
+
     private final WebClientService webClientService;
     private final FileUploadService fileUploadService;
-
+    private final RedissonClient redissonClient;
+    private final HottestPlanService hottestPlanService;
     @Transactional
     public String createPlan(PlanCreateRequestDto planCreateRequestDTO,Long userId) throws FileNotFoundException {
         PlanBasicInfo planBasicInfo = planCreateRequestDTO.toEntity(userId);
@@ -51,23 +61,22 @@ public class PlanService {
         return fileUploadService.uploadDefaultImage(createdPlanId);
     }
 
+
+
     @Transactional
     public long updatePlan(TotalPlan totalPlan) {
         long planId = totalPlan.getPlanId();
 
-        if(planRepository.findById(planId).isEmpty()) {
+        if(planRepository.findById(planId).isEmpty())
             return 0;
-        }
 
-        if(isPlanExistInRanking(planId)) {
-            System.out.println("plan exists in ranking");
-            //write through
+        if(isPlanExistInRanking(planId))
             modifyPlanInRanking(totalPlan);
-        }
 
         planId = updatePlanToDB(totalPlan);
         return planId;
     }
+
 
     private long updatePlanToDB(TotalPlan totalPlan) {
         long planId;
@@ -204,14 +213,19 @@ public class PlanService {
         return comment;
 
     }
-    public PlanResponseDTO handleTotalPlanRequest(long planId,Long userId){
+
+    public PlanResponseDTO handleTotalPlanRequest(long planId,Long userId) throws InterruptedException {
         PlanResponseDTO totalPlan = planRepository.findTotalPlan(planId);
+        if(totalPlan == null) {
+            throw new IllegalArgumentException(String.format("해당 계획 없음"));
+        }
         TotalPlan plan = totalPlan.getTotalPlan();
         List<Place> placeList = destinationRepository.findPlaceListByPlanId(planId);
         // get vs set ???
-        setPlanOwner(plan.getUserId(),totalPlan);
-        setCommentsWithUsers(planId, totalPlan);
-        setDetailPlaceInfo(plan,placeList);
+        //setPlanOwner(plan.getUserId(),totalPlan);
+        //setCommentsWithUsers(planId, totalPlan);
+        //setDetailPlaceInfo(plan,placeList);
+        Thread.sleep(20); // 1밀리초 sleep
 
         totalPlan.isLiked(isPlanLiked(planId, userId));
         totalPlan.isScrapped(isPlanScrapped(planId,userId));
@@ -328,21 +342,35 @@ public class PlanService {
             planRepository.deleteComment(commentId);
     }
 
-    @Transactional
-    public void likePlan(long planId, long userId) {
 
-        if(isPlanExistInRanking(planId)){
-            ZSetOperations<String, String> zsetOps = redisTemplate.opsForZSet();
-            String planKey = "plan:content:" + planId;
-            zsetOps.incrementScore("topPlans",planKey,1);
-        } else {
-            planRepository.findById(planId)
-                    .orElseThrow(()-> new IllegalArgumentException("일치하는 계획 게시글 없음"));
-            planRepository.likePlan(userId,planId);
-            planRepository.upLike(planId);
-        }
-
+    public void likePlan(long planId, long userId) throws Exception {
+        if(hottestPlanService.isHottestPlan(planId))
+            hottestPlanService.likePlan(planId, userId);
+        else
+            likeNormalPlan(planId, userId);
     }
+
+    @Transactional
+    private void likeNormalPlan(long planId, long userId) throws InterruptedException {
+        log.info("인기목록 아님");
+        planRepository.findById(planId)
+                .orElseThrow(()-> new IllegalArgumentException("일치하는 계획 게시글 없음"));
+
+        RLock lock = redissonClient.getLock("plan:likes:" + Long.toString(planId));
+        try {
+            if (!lock.tryLock(5L, 3L, TimeUnit.SECONDS))
+                throw new RuntimeException("락 획득 실패");
+            planRepository.likePlan(userId, planId);
+            planRepository.upLike(planId);
+
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (lock != null && lock.isLocked())
+                lock.unlock();
+        }
+    }
+
 
     @Transactional
     public void scrapPlan(long planId, long userId) {
@@ -355,7 +383,6 @@ public class PlanService {
 
     @Transactional
     public List<PlanListResponseDTO> getHottestPlan(Long userId) {
-
         List<PlanListResponseDTO> top10Plans = planListRepository.findHottestPlan();
         return top10Plans;
     }

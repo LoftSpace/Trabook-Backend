@@ -14,8 +14,8 @@ import java.util.List;
 public class DayPlan {
     private long planId;
     private int day;
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private String startTime;
+    private String endTime;
     private List<Schedule> scheduleList;
 
     @Getter
@@ -54,7 +54,7 @@ public class DayPlan {
     }
     public DayPlan() {}
 
-    public DayPlan( long planId, int day, LocalTime startTime, LocalTime endTime, List<Schedule> scheduleList) {
+    public DayPlan( long planId, int day, String startTime, String endTime, List<Schedule> scheduleList) {
         this.planId = planId;
         this.day = day;
         this.startTime = startTime;
